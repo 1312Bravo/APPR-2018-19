@@ -6,7 +6,7 @@ Primerjava igralcev v ligi NBA glede na nacionalnost
 
 ## Avtor
 
-Urh Peček
+# Urh Peček
 
 ## Osnovna ideja
 
@@ -21,6 +21,7 @@ Urh Peček
 - https://www.basketball-reference.com/
 - http://www.espn.com/nba/statistics
 - https://stats.nba.com/
+- https://www.kaggle.com/jacobbaruch/nba-player-of-the-week
   
 
 # Plan dela
