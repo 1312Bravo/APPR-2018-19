@@ -12,7 +12,7 @@ Urh Peček
 
 - Primerjava igralcev v ligi NBA glede na nacionalnost:
   - Statistični indeksi
-  - dvig/padev forme
+  - dvig/padec forme
   - plača
   - poškodbe
   - pregled sezon (16,17) 18, predikcija za 2019 (tekoča)
