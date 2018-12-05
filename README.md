@@ -24,6 +24,7 @@ Primerjava igralcev v ligi NBA glede na nacionalnost
 - https://www.kaggle.com/jacobbaruch/nba-player-of-the-week -> igralci tedna 
 - https://en.wikipedia.org/wiki/List_of_foreign_NBA_players -> Tuji igralci (v preteklosti, trenutno, lahko urediš)
 - https://en.wikipedia.org/wiki/2018%E2%80%9319_NBA_season -> sezone 2017/18
+
   
 
 # Plan dela
@@ -89,6 +90,8 @@ Naknadno bom primerjal med sabo še posamezne Evropske države:
    
 # 3) Združitev obstoječih tabel: grobe statistike in nacionalnosti
   Nastane nova tabela z dodano nacionalnostjo -> "Glavna tabela"
+  
+
 
 # 4) Igralnce pozicije
   Igralce bom razdelil glede na igralne pozicije in jih uredil glede na:

@@ -1,0 +1,52 @@
+WORLD
+RANK	COUNTRY	EUROPE
+RANK	IOC	CURRENT POINTS	+/- RANK *
+2.	ESPSpain	1.	ESP	704.2	0
+3.	FRAFrance	2.	FRA	647.2	0
+4.	SRBSerbia	3.	SRB	644.2	0
+6.	LTULithuania	4.	LTU	620.2	0
+7.	SLOSlovenia	5.	SLO	600.7	0
+8.	CROCroatia	6.	CRO	577.7	0
+9.	GREGreece	7.	GRE	567.0	0
+12.	RUSRussia	8.	RUS	476.1	0
+14.	ITAItaly	9.	ITA	451.5	0
+16.	LATLatvia	10.	LAT	421.9	0
+17.	TURTurkey	11.	TUR	405.0	0
+19.	UKRUkraine	12.	UKR	384.9	0
+21.	FINFinland	13.	FIN	364.6	0
+22.	GERGermany	14.	GER	354.1	0
+24.	CZECzech Republic	15.	CZE	326.1	0
+26.	GEOGeorgia	16.	GEO	305.6	0
+27.	POLPoland	17.	POL	304.4	0
+28.	BELBelgium	18.	BEL	287.4	0
+31.	MNEMontenegro	19.	MNE	265.4	0
+35.	ISRIsrael	20.	ISR	234.0	0
+39.	HUNHungary	21.	HUN	218.1	+2
+40.	MKDMKD	22.	MKD	211.6	0
+41.	GBRGreat Britain	23.	GBR	205.8	-2
+42.	BIHBosnia and Herzegovina	24.	BIH	204.4	+1
+44.	NEDNetherlands	25.	NED	197.8	0
+45.	ISLIceland	26.	ISL	186.1	0
+47.	ESTEstonia	27.	EST	180.2	0
+48.	BULBulgaria	28.	BUL	179.9	+2
+53.	SWESweden	29.	SWE	147.9	0
+55.	AUTAustria	30.	AUT	139.1	+1
+56.	BLRBelarus	31.	BLR	138.0	-1
+59.	ROURomania	32.	ROU	121.6	-1
+60.	PORPortugal	33.	POR	114.7	0
+66.	SUISwitzerland	34.	SUI	99.4	0
+68.	SVKSlovakia	35.	SVK	90.9	-1
+69.	DENDenmark	36.	DEN	90.5	+2
+81.	LUXLuxembourg	37.	LUX	70.6	-4
+82.	KOSKosovo	38.	KOS	68.0	-1
+85.	ARMArmenia	39.	ARM	65.9	+5
+89.	CYPCyprus	40.	CYP	63.6	0
+94.	ANDAndorra	41.	AND	60.4	+6
+95.	MLTMalta	42.	MLT	59.8	+4
+100.	ALBAlbania	43.	ALB	53.9	-8
+108.	NORNorway	44.	NOR	47.1	+10
+110.	IRLIreland	45.	IRL	44.9	+5
+113.	AZEAzerbaijan	46.	AZE	42.8	+4
+116.	SMRSan Marino	47.	SMR	41.3	-5
+122.	MDAMoldova	48.	MDA	33.5	-3
+132.	GIBGibraltar	49.	GIB	25.6	-10
