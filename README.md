@@ -18,11 +18,12 @@ Primerjava igralcev v ligi NBA glede na nacionalnost
   - pregled sezon (16,17) 18, predikcija za 2019 (tekoča)
 
 ## Glavni viri: 
-- https://www.basketball-reference.com/
+- https://www.basketball-reference.com/ -> najbolj obsežna statistika, glaven vir
 - http://www.espn.com/nba/statistics
 - https://stats.nba.com/
-- https://www.kaggle.com/jacobbaruch/nba-player-of-the-week
-- https://en.wikipedia.org/wiki/List_of_foreign_NBA_players 
+- https://www.kaggle.com/jacobbaruch/nba-player-of-the-week -> igralci tedna 
+- https://en.wikipedia.org/wiki/List_of_foreign_NBA_players -> Tuji igralci (v preteklosti, trenutno, lahko urediš)
+- https://en.wikipedia.org/wiki/2018%E2%80%9319_NBA_season -> sezone 2017/18
   
 
 # Plan dela
@@ -45,9 +46,56 @@ Naknadno bom primerjal med sabo še posamezne Evropske države:
 
   
   
+
+##  Posodobljen plan dela
+   Podatki bodo is sezone 2017/18
+
+
+  Začel bom s povzetkom statističnih podatkov skozi celotno sezono, nato pa po potrebi dodal še statistike            posameznih tekem.
+
+#  1) Groba statistika sezone
+  https://www.basketball-reference.com/leagues/NBA_2018_totals.html
   
+  Urejena tabela: https://www.basketball-reference.com/pi/shareit/U2cwM 
+  tabela 1) CSV.txt
+    
+  Stolpci:
+    - Player
+    - Pos	(position)	
+    - G (games played)
+    -	MP (minutes played)
+    - eFG% (efective field goal percentage)
+    - FT% (free throw percentage)
+    -	TRB (total rebounds)	  
+    - AST	(asists)
+    - STL (steals)
+    - BLK (blocks)	
+    - TOV	(turnovers)
+    - PF (personal fouls)	
+    - PTS (points)
   
+ 
+  Nato bom igralce uredil po nacionalnosti.
+  Razdelil jih bom na tujce in na američane, nato pa tujce še po posameznih državah.
+  Za to bom uporabil tabelo iz wikipedije, ki jo bo treba še urediti, saj vsebuje tudi igralce, ki ne igrajo več,     vendar s tem ne bo velikih držav saj so še vedno aktivni igralci označeni z '*'.
   
+
+#  2) Nacionalnost
+   https://en.wikipedia.org/wiki/List_of_foreign_NBA_players
+   Tabele še nisem prenel saj še neznam.
+   
+   Vzel bom samo stolpca Nationality in Player ter pri player izbral vrstice z '*' pri imenu.
+   
+   
+# 3) Združitev obstoječih tabel: grobe statistike in nacionalnosti
+  Nastane nova tabela z dodano nacionalnostjo -> "Glavna tabela"
+
+# 4) Igralnce pozicije
+  Igralce bom razdelil glede na igralne pozicije in jih uredil glede na:
   
+  - delež tujcev (ne Američanov) na vseh petih pozicijah.
+  - igralne minute 
+  - število metov
+  - število točk
   
   
