@@ -22,6 +22,7 @@ Primerjava igralcev v ligi NBA glede na nacionalnost
 - http://www.espn.com/nba/statistics
 - https://stats.nba.com/
 - https://www.kaggle.com/jacobbaruch/nba-player-of-the-week
+- https://en.wikipedia.org/wiki/List_of_foreign_NBA_players 
   
 
 # Plan dela
