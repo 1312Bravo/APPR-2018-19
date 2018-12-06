@@ -6,11 +6,11 @@ sl <- locale("sl", decimal_mark=",", grouping_mark=".")
 uvozi.evropejce <- function() {
   link <- "http://pr.nba.com/nba-international-players-2017-18/"
   stran <- html_session(link) %>% read_html()
-  evropejcivNBA <- stran %>% html_nodes(xpath="//table[@width='691']") %>%
+  evropejci <- stran %>% html_nodes(xpath="//table[@width='691']") %>%
     .[[1]] %>% html_table()
-  colnames(tabela) <- evropejci[1, ]
+  colnames(evropejci) <- evropejci[1, ]
   evropejci <- evropejci[-1, ]
-  evropejci <- evropejci[,-5]
+  evropejci <- evropejci[,-4]
   for (i in 1:ncol(evropejci)) {
     if (is.character(evropejci[[i]])) {
       Encoding(evropejci[[i]]) <- "UTF-8"
