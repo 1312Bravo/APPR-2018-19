@@ -48,7 +48,7 @@ Naknadno bom primerjal med sabo še posamezne Evropske države:
   
   
 
-##  Posodobljen plan dela
+##  Posodobljen plan dela $5.12.2108$
    Podatki bodo is sezone 2017/18
 
 
@@ -78,27 +78,26 @@ Naknadno bom primerjal med sabo še posamezne Evropske države:
  
   Nato bom igralce uredil po nacionalnosti.
   Razdelil jih bom na tujce in na američane, nato pa tujce še po posameznih državah.
-  Za to bom uporabil tabelo iz wikipedije, ki jo bo treba še urediti, saj vsebuje tudi igralce, ki ne igrajo več,     vendar s tem ne bo velikih držav saj so še vedno aktivni igralci označeni z '*'.
+  Za to bom uporabil tabelo iz wikipedije, ki jo bo treba še urediti, saj vsebuje tudi igralce, ki ne igrajo več,    vendar s tem ne bo velikih držav saj so še vedno aktivni igralci označeni z '*'.
   
 
 #  2) Nacionalnost
    https://en.wikipedia.org/wiki/List_of_foreign_NBA_players
    Tabele še nisem prenel saj še neznam.
    
-   Vzel bom samo stolpca Nationality in Player ter pri player izbral vrstice z '*' pri imenu.
+   http://pr.nba.com/nba-international-players-2017-18/
+   Ta tabela je boljša. (View source so podatki v XML)
    
    
 # 3) Združitev obstoječih tabel: grobe statistike in nacionalnosti
-  Nastane nova tabela z dodano nacionalnostjo -> "Glavna tabela"
+  Nastane nova tabela z dodano nacionalnostjo -> "Skupna tabela"
   
 
-
-# 4) Igralnce pozicije
-  Igralce bom razdelil glede na igralne pozicije in jih uredil glede na:
+# 4) Dodatek: plače
+  https://hoopshype.com/salaries/players/2017-2018/
+  Skupni tabeli bom dodal še plače igralcev
   
-  - delež tujcev (ne Američanov) na vseh petih pozicijah.
-  - igralne minute 
-  - število metov
-  - število točk
-  
+# 5) Fiba ranking
+  http://www.fiba.basketball/rankingmen#|tab=fiba_europe 
+  Fiba_ranking.txt
   
