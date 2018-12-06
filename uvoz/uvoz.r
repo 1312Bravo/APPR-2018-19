@@ -3,14 +3,17 @@
 sl <- locale("sl", decimal_mark=",", grouping_mark=".")
 
 # Funkcija, ki uvozi občine iz Wikipedije
-uvozi.obcine <- function() {
-  link <- "http://sl.wikipedia.org/wiki/Seznam_ob%C4%8Din_v_Sloveniji"
+uvozi.evropejce <- function() {
+  link <- "http://pr.nba.com/nba-international-players-2017-18/"
   stran <- html_session(link) %>% read_html()
-  tabela <- stran %>% html_nodes(xpath="//table[@class='wikitable sortable']") %>%
-    .[[1]] %>% html_table(dec=",")
-  for (i in 1:ncol(tabela)) {
-    if (is.character(tabela[[i]])) {
-      Encoding(tabela[[i]]) <- "UTF-8"
+  evropejcivNBA <- stran %>% html_nodes(xpath="//table[@width='691']") %>%
+    .[[1]] %>% html_table()
+  colnames(tabela) <- evropejci[1, ]
+  evropejci <- evropejci[-1, ]
+  evropejci <- evropejci[,-5]
+  for (i in 1:ncol(evropejci)) {
+    if (is.character(evropejci[[i]])) {
+      Encoding(evropejci[[i]]) <- "UTF-8"
     }
   }
   colnames(tabela) <- c("obcina", "povrsina", "prebivalci", "gostota", "naselja",
