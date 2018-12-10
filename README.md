@@ -100,4 +100,40 @@ Naknadno bom primerjal med sabo še posamezne Evropske države:
 # 5) Fiba ranking
   http://www.fiba.basketball/rankingmen#|tab=fiba_europe 
   Fiba_ranking.txt
+
+## Tabele  
+
+Tabela 1): TABELA_1)
+TOP 20:
+-points
+-asists
+-rebounds
+-steals
+-turnovers
+-field goal percentage
+-field goal attempts
+-minutes played
+
+Analiziral bom število Evropejcec med TOP 20 in kje so.
+
+Tabela 2):
+TOP 10 Non Europeans vs top 10 Europeans:
+-points
+-asists
+-rebounds
+-steals
+-turnovers
+-field goal percentage
+-field goal attempts
+-minutes played
+
+Tabela 3)
+Samo evropejci v NBA
+-koliko jih prihaja iz katere države
+-število igralcev države glede na število prebivalcev te države
+-število igralcev glede na fiba ranking te države
+
+
+  
+ 
   
