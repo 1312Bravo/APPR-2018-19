@@ -4,7 +4,7 @@ source("lib/libraries.r", encoding="UTF-8")
 library(tidyr)
 
 Statistika <- read_csv("Statistika.txt")
-Statistika$Player
+
 View(Statistika)
 
 
@@ -26,3 +26,17 @@ uvozi.evropejce <- function() {
 evropejci <- unite(evropejci, "Name", c("First Name", "Last Name"), remove=FALSE)
 evropejci <- evropejci[ ,-c(3,4)]
 evropejci <- evropejci %>% mutate(Name = gsub("_", " ", Name))
+
+
+
+uvozi.prebivalstvo<- function() {
+  link <- "https://en.wikipedia.org/wiki/Demographics_of_Europe"
+  stran <- html_session(link) %>% read_html()
+  tabela <- stran %>% html_nodes(xpath="//table[@class='wikitable sortable sortable']") %>%
+    .[[1]] %>% html_table(dec = ",")
+  for (i in 1:ncol(tabela)) {
+    if (is.character(tabela[[i]])) {
+      Encoding(tabela[[i]]) <- "UTF-8"
+    }
+  }
+}
