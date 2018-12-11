@@ -28,8 +28,7 @@ Primerjava igralcev v ligi NBA glede na nacionalnost
   
 
 # Plan dela
-Podatke bom zbral iz sezon 2015/16, 16/17, 17/18. Če se bo izkazalo da jih je preveč
-in bi bila dovolj ena sezona, bom vzel zgolj sezono 17/18.
+Podatke bom zbral iz sezone 17/18. 
 Igralce bom med sabo primerjal po več kriterijih:
   - delež tujcev (ne Američanov) na vseh petih pozicijah.
   - povprečje točk glede na pozicije in na splošno
@@ -52,7 +51,7 @@ Naknadno bom primerjal med sabo še posamezne Evropske države:
    Podatki bodo is sezone 2017/18
 
 
-  Začel bom s povzetkom statističnih podatkov skozi celotno sezono, nato pa po potrebi dodal še statistike            posameznih tekem.
+  Začel bom s povzetkom statističnih podatkov skozi celotno sezono, nato pa po potrebi dodal še statistike           posameznih tekem.
 
 #  1) Groba statistika sezone
   https://www.basketball-reference.com/leagues/NBA_2018_totals.html

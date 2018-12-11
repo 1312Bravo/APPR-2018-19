@@ -2,10 +2,13 @@
 sl <- locale("sl", decimal_mark=",", grouping_mark=".")
 source("lib/libraries.r", encoding="UTF-8")
 library(tidyr)
+library(readxl)
+library(data.table)
+library(dplyr)
 
 Statistika <- read_csv("Statistika.txt")
-
-View(Statistika)
+Statistika <- Statistika[,-1]
+Statistika$Player = gsub("^(.*)\\\\.*", "\\1", Statistika$Player)
 
 
 uvozi.evropejce <- function() {
@@ -26,17 +29,28 @@ uvozi.evropejce <- function() {
 evropejci <- unite(evropejci, "Name", c("First Name", "Last Name"), remove=FALSE)
 evropejci <- evropejci[ ,-c(3,4)]
 evropejci <- evropejci %>% mutate(Name = gsub("_", " ", Name))
+evropejci <- evropejci[, c(2,1)]
+
+evropske_drzave <- prebivalstvo$Country
+evropejci <- filter(evropejci, Country %in% evropske_drzave)
 
 
 
-uvozi.prebivalstvo<- function() {
-  link <- "https://en.wikipedia.org/wiki/Demographics_of_Europe"
-  stran <- html_session(link) %>% read_html()
-  tabela <- stran %>% html_nodes(xpath="//table[@class='wikitable sortable sortable']") %>%
-    .[[1]] %>% html_table(dec = ",")
-  for (i in 1:ncol(tabela)) {
-    if (is.character(tabela[[i]])) {
-      Encoding(tabela[[i]]) <- "UTF-8"
-    }
-  }
-}
+
+
+prebivalstvo <- read_excel("podatki/prebivalstvo.xlsx")
+prebivalstvo <- prebivalstvo[,c(2,3)]
+prebivalstvo <- prebivalstvo[-1,]
+colnames(prebivalstvo)[1] <- "Country"
+
+
+place <- read_excel("podatki/place.xlsx")
+place <- place[,c(2,3)]
+setnames(place, old = c('2017/18','X__1'), new = c('Player','Salary'))
+
+
+fiba_ranking <- read_excel("podatki/fiba_ranking.xlsx")
+fiba_ranking <- fiba_ranking[,c(-4,-6)]
+fiba_ranking <- fiba_ranking[-1,]
+fiba_ranking <- fiba_ranking[,c(2,4,1,3)]
+fiba_ranking$COUNTRY = gsub("^([A-Z][A-Z][A-Z])(.*)$", "\\2", fiba_ranking$COUNTRY)
