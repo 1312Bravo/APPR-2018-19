@@ -12,8 +12,10 @@ library(dplyr)
 
 # Funkcija, ki uvozi podatke iz tabele statistika.txt
 uvozi.statistiko <- function(statistika) {
-  data <- Statistika <- read_csv("podatki/statistika.txt")
+  data <- read_csv2("podatki/statistika.txt")
 }
+
+#Tu se pojavljajo neke napake
 
 # Zapis podatkov v razpredelnico statistika
 statistika <- uvozi.statistiko()
@@ -21,7 +23,6 @@ statistika <- uvozi.statistiko()
 statistika <- statistika[,-1]
 # Urejen stolpec Player, ki sedaj vsebuje samo imena
 statistika$Player = gsub("^(.*)\\\\.*", "\\1", statistika$Player)
-View(statistika)
 
 # UVOZ PLAC
 
@@ -71,6 +72,10 @@ evropejci <- evropejci[ ,-c(3,4)]
 evropejci <- evropejci %>% mutate(Name = gsub("_", " ", Name))
 # Zamenjava vrstnega reda stolpcev
 evropejci <- evropejci[, c(2,1)]
+#Sedaj so v tabeli evropejci res samo evropejci
+evropske_drzave <- populacija$Country
+evropejci <- filter(evropejci, Country %in% evropske_drzave)
+
 
 
 # UVOZ  FIBA LESTVICE ZA EVROPO
@@ -89,4 +94,26 @@ fiba.lestvica <- uvozi.fibalestvico()
 fiba.lestvica <- fiba.lestvica[,c(-4,-6)]
 # Zamenjava vrstnega reda stolpcev
 fiba.lestvica <- fiba.lestvica[,c(2,4,1,3)]
+
+
+# UVOZ POPULACIJE EVROPSKIH DRZAV
+
+# Funkcija za uvoz podatkov o populaciji evropskih drzav iz datotetke populacija.csv
+uvozi.populacijo <- function(populacija) {
+  tabela <- read_delim("podatki/populacija.csv", 
+                           ";", col_names = FALSE, 
+                           col_types = cols(X2 = col_number()), 
+                           locale = locale(encoding = "WINDOWS-1250"))
+}
+
+# Zapis podatkov v razpredelnico populacija
+populacija <- uvozi.populacijo()
+# Poimenovanje stolpcev
+names(populacija) <- c("Country", "Population")
+
+#Sedaj imam v tabeli evropejci res samo evropejce
+evropske_drzave <- populacija$Country
+evropejci <- filter(evropejci, Country %in% evropske_drzave)
+
+
 
