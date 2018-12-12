@@ -1,57 +1,92 @@
 # 2. faza: Uvoz podatkov
 
 sl <- locale("sl", decimal_mark=",", grouping_mark=".")
+source("lib/libraries.r", encoding="UTF-8")
+library(tidyr)
+library(readxl)
+library(data.table)
+library(dplyr)
 
-# Funkcija, ki uvozi občine iz Wikipedije
+
+# UVOZ STATISTIKE
+
+# Funkcija, ki uvozi podatke iz tabele statistika.txt
+uvozi.statistiko <- function(statistika) {
+  data <- Statistika <- read_csv("podatki/statistika.txt")
+}
+
+# Zapis podatkov v razpredelnico statistika
+statistika <- uvozi.statistiko()
+# Pobrisan prvi stolpec z imenom Rk (ranking)
+statistika <- statistika[,-1]
+# Urejen stolpec Player, ki sedaj vsebuje samo imena
+statistika$Player = gsub("^(.*)\\\\.*", "\\1", statistika$Player)
+View(statistika)
+
+# UVOZ PLAC
+
+# Funkcija, ki uvozi place iz strani hoopshype.com
+uvozi.place <- function(){
+  link <- "https://hoopshype.com/salaries/players/2017-2018/"
+  stran <- html_session(link) %>% read_html()
+  place <- stran %>% html_nodes(xpath="//table[@class='hh-salaries-ranking-table hh-salaries-table-sortable responsive']") %>%
+    .[[1]] %>% html_table()
+}
+
+# Zapis podatkov v razpredelnico place
+place <- uvozi.place()
+# Poimenovanje stolpcov z imeni v prvi vrstici
+colnames(place) <- place[1,]
+# Odstranjena prva vrstica in prvi stolpec
+place <- place[-1, -1 ]
+# Preimenovanje drugega stolpca
+names(place)[2] <- "Salary"
+# Pretvorba v stevila v stolpcu Salary
+place <- place %>% mutate(Salary=parse_number(Salary,
+                                             locale=locale(grouping_mark=",")))
+
+# UVOZ EVROPEJCEV
+
+# Funkcija, ki uvozi evropejce iz strani nba.com
 uvozi.evropejce <- function() {
   link <- "http://pr.nba.com/nba-international-players-2017-18/"
   stran <- html_session(link) %>% read_html()
   evropejci <- stran %>% html_nodes(xpath="//table[@width='691']") %>%
     .[[1]] %>% html_table()
-  colnames(evropejci) <- evropejci[1, ]
-  evropejci <- evropejci[-1, ]
-  evropejci <- evropejci[,-4]
-  for (i in 1:ncol(evropejci)) {
-    if (is.character(evropejci[[i]])) {
-      Encoding(evropejci[[i]]) <- "UTF-8"
-    }
-  }
-  colnames(tabela) <- c("obcina", "povrsina", "prebivalci", "gostota", "naselja",
-                        "ustanovitev", "pokrajina", "regija", "odcepitev")
-  tabela$obcina <- gsub("Slovenskih", "Slov.", tabela$obcina)
-  tabela$obcina[tabela$obcina == "Kanal ob Soči"] <- "Kanal"
-  tabela$obcina[tabela$obcina == "Loški potok"] <- "Loški Potok"
-  for (col in c("povrsina", "prebivalci", "gostota", "naselja", "ustanovitev")) {
-    tabela[[col]] <- parse_number(tabela[[col]], na="-", locale=sl)
-  }
-  for (col in c("obcina", "pokrajina", "regija")) {
-    tabela[[col]] <- factor(tabela[[col]])
-  }
-  return(tabela)
 }
 
-# Funkcija, ki uvozi podatke iz datoteke druzine.csv
-uvozi.druzine <- function(obcine) {
-  data <- read_csv2("podatki/druzine.csv", col_names=c("obcina", 1:4),
-                    locale=locale(encoding="Windows-1250"))
-  data$obcina <- data$obcina %>% strapplyc("^([^/]*)") %>% unlist() %>%
-    strapplyc("([^ ]+)") %>% sapply(paste, collapse=" ") %>% unlist()
-  data$obcina[data$obcina == "Sveti Jurij"] <- "Sveti Jurij ob Ščavnici"
-  data <- data %>% melt(id.vars="obcina", variable.name="velikost.druzine",
-                        value.name="stevilo.druzin")
-  data$velikost.druzine <- parse_number(data$velikost.druzine)
-  data$obcina <- factor(data$obcina, levels=obcine)
-  return(data)
+# Zapis podatkov v razpredelnico evropejci
+evropejci <- uvozi.evropejce()
+# Poimenovanje stolpcov z imeni v prvi vrstici
+colnames(evropejci) <- evropejci[1, ]
+# Odstranjena prva vrstica
+evropejci <- evropejci[-1, ]
+# Odstranjen 4. stolpec z imeni ekip
+evropejci <- evropejci[,-4]
+# Zdruzitev stolpcev First in Last Name v dodan stolpec Name
+evropejci <- unite(evropejci, "Name", c("First Name", "Last Name"), remove=FALSE)
+# Izbris 3. in 4. stolpca
+evropejci <- evropejci[ ,-c(3,4)]
+# Zamenjava znaka _ s " " v stolpcu Name
+evropejci <- evropejci %>% mutate(Name = gsub("_", " ", Name))
+# Zamenjava vrstnega reda stolpcev
+evropejci <- evropejci[, c(2,1)]
+
+
+# UVOZ  FIBA LESTVICE ZA EVROPO
+
+# # Funkcija, ki uvozi fiba lestvico evropskih drzav iz strani fiba.basketball.com
+uvozi.fibalestvico <- function() {
+  link <- "http://www.fiba.basketball/rankingmen#%7Ctab=fiba_europe"
+  stran <- html_session(link) %>% read_html()
+  fiba.lestvica <- stran %>% html_nodes(xpath="//table[@class='fiba_ranking_table columnhover default_style responsive']") %>%
+    .[[5]] %>% html_table()
 }
 
-# Zapišimo podatke v razpredelnico obcine
-obcine <- uvozi.obcine()
+# Zapis podatkov v razpredelnico fiba.lestvica
+fiba.lestvica <- uvozi.fibalestvico()
+# Izbris nepotrebnih stolpcev 
+fiba.lestvica <- fiba.lestvica[,c(-4,-6)]
+# Zamenjava vrstnega reda stolpcev
+fiba.lestvica <- fiba.lestvica[,c(2,4,1,3)]
 
-# Zapišimo podatke v razpredelnico druzine.
-druzine <- uvozi.druzine(levels(obcine$obcina))
-
-# Če bi imeli več funkcij za uvoz in nekaterih npr. še ne bi
-# potrebovali v 3. fazi, bi bilo smiselno funkcije dati v svojo
-# datoteko, tukaj pa bi klicali tiste, ki jih potrebujemo v
-# 2. fazi. Seveda bi morali ustrezno datoteko uvoziti v prihodnjih
-# fazah.

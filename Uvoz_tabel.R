@@ -6,7 +6,7 @@ library(readxl)
 library(data.table)
 library(dplyr)
 
-Statistika <- read_csv("Statistika.txt")
+Statistika <- read_csv("podatki/statistika.txt")
 Statistika <- Statistika[,-1]
 Statistika$Player = gsub("^(.*)\\\\.*", "\\1", Statistika$Player)
 
@@ -44,9 +44,9 @@ prebivalstvo <- prebivalstvo[-1,]
 colnames(prebivalstvo)[1] <- "Country"
 
 
-place <- read_excel("podatki/place.xlsx")
-place <- place[,c(2,3)]
-setnames(place, old = c('2017/18','X__1'), new = c('Player','Salary'))
+Place <- read_excel("podatki/place.xlsx")
+Place <- place[,c(2,3)]
+setnames(Place, old = c('2017/18','X__1'), new = c('Player','Salary'))
 
 
 fiba_ranking <- read_excel("podatki/fiba_ranking.xlsx")
