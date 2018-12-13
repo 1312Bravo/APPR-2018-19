@@ -46,6 +46,8 @@ names(place)[2] <- "Salary"
 # Pretvorba v stevila v stolpcu Salary
 place <- place %>% mutate(Salary=parse_number(Salary,
                                              locale=locale(grouping_mark=",")))
+# Zadnji dve stevilki pri placi sta enaki 0, za vecjo preglednost
+place$Salary <- signif(place$Salary, digits=5)
 
 # UVOZ EVROPEJCEV
 
@@ -76,7 +78,6 @@ evropejci <- evropejci[, c(2,1)]
 #Sedaj so v tabeli evropejci res samo evropejci
 evropske_drzave <- populacija$Country
 evropejci <- filter(evropejci, Country %in% evropske_drzave)
-
 
 
 # UVOZ  FIBA LESTVICE ZA EVROPO

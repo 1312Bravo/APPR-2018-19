@@ -74,14 +74,18 @@ Tri tabele so uvožene v obliki HTML iz zgoraj naštetih spletnih strani -> fiba
   - `Player` - spremenljivka: ime igralca [character]
   - `Country` - spremenljivka: država iz katere posamezen igralec prihaja [character]
   
-4. 'fiba.lestvica -> podatki o številu točk posamezne evropske države na fibini lestvici, poziciji na svetovni in evropski lestivici.
+4. 'fiba.lestvica -> podatki o številu točk posamezne evropske države ter poziciji na svetovni in evropski fibini lestivici.
   - `Country` - spremenljivka: ime države [character]
   - `Points` - spremenljivka: število točk na fibini lestvici [numeric]
+  - `Worldrank` - spremenljivka: mesto na svetovni lestivic [numeric]
+  - `Europerank` - spremenljivka: mesto na evropski lestvici [numeric]
   
+5. 'populacija' -> podatki o številu prebivalstva v posameznih evropskih državah.
+  - `Country` - spremenljivka: ime države [character]
+  - `Population` - spremenljivka: število prebivalcev posamezne države [numeric]
 
 
-
-  **Opomba**: da bi razpredelnica `obcine` res bila v obliki *tidy data*, bi morali odstraniti stolpec `gostota` (saj je izpeljan iz stolpcev `povrsina` in `prebivalci`), podatke o pokrajinah pa bi morali premakniti v drugo razpredelnico, saj nekatere občine pripadajo dvema pokrajinama. Podobno bi morali narediti tudi s stolpcem `odcepitev`.
+ 
 
 Spodnji graf prikazuje porazdelitev števila naselij v občinah.
 
