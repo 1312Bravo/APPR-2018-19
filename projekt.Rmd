@@ -26,9 +26,10 @@ source("lib/rstudio.r", encoding="UTF-8")
 
 # Izbira teme
 
-Za vzorec bomo prikazali nekaj podatkov o slovenskih občinah.
+Primerjava evropejcev z ostalimi v ligi NBA in primerjava evropejcev med sabo.
+Primerjava je narejena glede na sezono 2017/18.
 
-![](slike/grb.png)
+![](slike/NBAlog.png)
 
 ***
 
@@ -38,26 +39,49 @@ Za vzorec bomo prikazali nekaj podatkov o slovenskih občinah.
 source("uvoz/uvoz.r", encoding="UTF-8")
 ```
 
-Uvozili smo podatke o občinah v obliki CSV s statističnega urada ter v obliki HTML
-z Wikipedije. Podatke imamo v dveh razpredelnicah v obliki *tidy data*.
+Podatki so uvoženi s spletnih strani basketball-reference.com, hoopshype.com,
+nba.com, fiba.basketball.com, worldpopulationreview.com
 
-1. `druzine` - podatki o družinah za vsako občino
-  - `obcina` - spremenljivka: ime občine (neurejen faktor),
-  - `velikost.druzine` - spremenljivka: število otrok v družini (število: 1, 2, 3 ali 4, kjer zadnja vrednost pomeni 4 ali več),
-  - `stevilo.druzin` - meritev: število družin z ustreznim številom otrok v ustrezni občini (število).
+Dve tabeli sta uvoženi v obliki csv -> statistika, populacija.
+Tri tabele so uvožene v obliki HTML iz zgoraj naštetih spletnih strani -> fiba.lestvica, evropejci, place
 
-2. `obcine` - podatki o občinah
-  - `obcina` - spremenljivka: ime občine (neurejen faktor),
-  - `povrsina` - meritev: površina občine v km$^2$ (število),
-  - `prebivalci` - meritev: prebivalstvo občine (število),
-  - `gostota` - meritev: število prebivalcev na km$^2$ (število),
-  - `naselja` - meritev: število naselij v občini (število),
-  - `ustanovitev` - meritev: leto ustanovitve občine (število),
-  - `pokrajina` - meritev: pokrajina, ki ji občina pripada (neurejen faktor),
-  - `regija` - meritev: regija, ki ji občina pripada (neurejen faktor),
-  - `odcepitev` - meritev: podatki o občinah, od katerih se je občina odcepila (besedilo).
+1.'statistika' -> Podatki o splosni statistiki vseh igralcev skozi celotno sezono
+  - `Player` - spremenljivka: ime igralca [character]
+  - `Pos` - spremenljivka: pozicija na kateri igralec igra: PG, SG, SF, PF, C [character],
+  - `G` - spremenljivka: število odigranih tekem [numeric],
+  - `GS` - spremenljivka: število tekem v katerih je igralec začel v prvi peterki [numeric]
+  - `MP` - spremenljivka: število odigranih minut [numeric]
+  - `FGA` - spremenljivka: število metov [numeric]
+  - `eFG%` - spremenljivka: efektiven odstotek meta iz igre, pri čemer met za 3 tocčke šteje več kot met za 2 točki [numeric]
+  - `FTA` - spremenljivka: število prostih metov [numeric]
+  - `FT%` - spremenljivka: odstotek zadetih prostih metov [numeric]
+  - `FTA` - spremenljivka: število prostih metov [numeric]
+  - `TRB` - spremenljivka: število skokov, pri čemer se štejejto tako tisti v obrambi kot v napadu [numeric]
+  - `AST` - spremenljivka: število podaj [numeric]
+  - `STL` - spremenljivka: število ukradenih žog [numeric]
+  - `BLK` - spremenljivka: število blokad [numeric]
+  - `TOV` - spremenljivka: število izgubljenih žog [numeric]
+  - `PF` - spremenljivka: število narejenih prekrškov [numeric]
+  - `FTA` - spremenljivka: število prostih metov [numeric]
+  - `PTS` - spremenljivka: število doseženih točk [numeric]
+  
+  
+2. 'place -> podatki o višini plač igralcev
+  - `Player` - spremenljivka: ime igralca [character]
+  - `Salary` - spremenljivka: višina plače na sezono [numeric]
 
-**Opomba**: da bi razpredelnica `obcine` res bila v obliki *tidy data*, bi morali odstraniti stolpec `gostota` (saj je izpeljan iz stolpcev `povrsina` in `prebivalci`), podatke o pokrajinah pa bi morali premakniti v drugo razpredelnico, saj nekatere občine pripadajo dvema pokrajinama. Podobno bi morali narediti tudi s stolpcem `odcepitev`.
+3. 'evropejci' -> podatki o evropejcih in njihovi nacionalnosti
+  - `Player` - spremenljivka: ime igralca [character]
+  - `Country` - spremenljivka: država iz katere posamezen igralec prihaja [character]
+  
+4. 'fiba.lestvica -> podatki o številu točk posamezne evropske države na fibini lestvici, poziciji na svetovni in evropski lestivici.
+  - `Country` - spremenljivka: ime države [character]
+  - `Points` - spremenljivka: število točk na fibini lestvici [numeric]
+  
+
+
+
+  **Opomba**: da bi razpredelnica `obcine` res bila v obliki *tidy data*, bi morali odstraniti stolpec `gostota` (saj je izpeljan iz stolpcev `povrsina` in `prebivalci`), podatke o pokrajinah pa bi morali premakniti v drugo razpredelnico, saj nekatere občine pripadajo dvema pokrajinama. Podobno bi morali narediti tudi s stolpcem `odcepitev`.
 
 Spodnji graf prikazuje porazdelitev števila naselij v občinah.
 

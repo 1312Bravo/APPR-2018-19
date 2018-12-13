@@ -1,21 +1,22 @@
 # 2. faza: Uvoz podatkov
 
+# separate, fill, melt (>?separate)
+
 sl <- locale("sl", decimal_mark=",", grouping_mark=".")
 source("lib/libraries.r", encoding="UTF-8")
 library(tidyr)
 library(readxl)
 library(data.table)
 library(dplyr)
-
+library(readr)
+library(ggplot2)
 
 # UVOZ STATISTIKE
 
-# Funkcija, ki uvozi podatke iz tabele statistika.txt
-uvozi.statistiko <- function(statistika) {
-  data <- read_csv2("podatki/statistika.txt")
+# Funkcija, ki uvozi podatke iz tabele statistika.txt (basketball-reference.com)
+uvozi.statistiko <- function() {
+  data <- read_csv("podatki/statistika.txt", locale=locale(encoding="Windows-1250"))
 }
-
-#Tu se pojavljajo neke napake
 
 # Zapis podatkov v razpredelnico statistika
 statistika <- uvozi.statistiko()
@@ -64,12 +65,12 @@ colnames(evropejci) <- evropejci[1, ]
 evropejci <- evropejci[-1, ]
 # Odstranjen 4. stolpec z imeni ekip
 evropejci <- evropejci[,-4]
-# Zdruzitev stolpcev First in Last Name v dodan stolpec Name
-evropejci <- unite(evropejci, "Name", c("First Name", "Last Name"), remove=FALSE)
+# Zdruzitev stolpcev First in Last Name v dodan stolpec Player
+evropejci <- unite(evropejci, "Player", c("First Name", "Last Name"), remove=FALSE)
 # Izbris 3. in 4. stolpca
 evropejci <- evropejci[ ,-c(3,4)]
-# Zamenjava znaka _ s " " v stolpcu Name
-evropejci <- evropejci %>% mutate(Name = gsub("_", " ", Name))
+# Zamenjava znaka _ s " " v stolpcu Player
+evropejci <- evropejci %>% mutate(Player = gsub("_", " ", Player))
 # Zamenjava vrstnega reda stolpcev
 evropejci <- evropejci[, c(2,1)]
 #Sedaj so v tabeli evropejci res samo evropejci
@@ -94,11 +95,13 @@ fiba.lestvica <- uvozi.fibalestvico()
 fiba.lestvica <- fiba.lestvica[,c(-4,-6)]
 # Zamenjava vrstnega reda stolpcev
 fiba.lestvica <- fiba.lestvica[,c(2,4,1,3)]
+# Preimenovanje drugega stolpca
+names(fiba.lestvica)[2] <- "Points"
 
 
 # UVOZ POPULACIJE EVROPSKIH DRZAV
 
-# Funkcija za uvoz podatkov o populaciji evropskih drzav iz datotetke populacija.csv
+# Funkcija za uvoz podatkov o populaciji evropskih drzav iz datotetke populacija.csv (worldpopulationreview.com)
 uvozi.populacijo <- function(populacija) {
   tabela <- read_delim("podatki/populacija.csv", 
                            ";", col_names = FALSE, 
@@ -114,6 +117,7 @@ names(populacija) <- c("Country", "Population")
 #Sedaj imam v tabeli evropejci res samo evropejce
 evropske_drzave <- populacija$Country
 evropejci <- filter(evropejci, Country %in% evropske_drzave)
+
 
 
 
