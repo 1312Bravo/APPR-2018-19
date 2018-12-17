@@ -52,32 +52,32 @@ place$Salary <- signif(place$Salary, digits=5)
 # UVOZ EVROPEJCEV
 
 # Funkcija, ki uvozi evropejce iz strani nba.com
-uvozi.evropejce <- function() {
+uvozi.tujce <- function() {
   link <- "http://pr.nba.com/nba-international-players-2017-18/"
   stran <- html_session(link) %>% read_html()
-  evropejci <- stran %>% html_nodes(xpath="//table[@width='691']") %>%
+  tujci <- stran %>% html_nodes(xpath="//table[@width='691']") %>%
     .[[1]] %>% html_table()
 }
 
 # Zapis podatkov v razpredelnico evropejci
-evropejci <- uvozi.evropejce()
+tujci <- uvozi.tujce()
 # Poimenovanje stolpcov z imeni v prvi vrstici
-colnames(evropejci) <- evropejci[1, ]
+colnames(tujci) <- tujci[1, ]
 # Odstranjena prva vrstica
-evropejci <- evropejci[-1, ]
+tujci <- tujci[-1, ]
 # Odstranjen 4. stolpec z imeni ekip
-evropejci <- evropejci[,-4]
+tujci <- tujci[,-4]
 # Zdruzitev stolpcev First in Last Name v dodan stolpec Player
-evropejci <- unite(evropejci, "Player", c("First Name", "Last Name"), remove=FALSE)
+tujci <- unite(tujci, "Player", c("First Name", "Last Name"), remove=FALSE)
 # Izbris 3. in 4. stolpca
-evropejci <- evropejci[ ,-c(3,4)]
+tujci <- tujci[ ,-c(3,4)]
 # Zamenjava znaka _ s " " v stolpcu Player
-evropejci <- evropejci %>% mutate(Player = gsub("_", " ", Player))
+tujci <- tujci %>% mutate(Player = gsub("_", " ", Player))
 # Zamenjava vrstnega reda stolpcev
-evropejci <- evropejci[, c(2,1)]
-#Sedaj so v tabeli evropejci res samo evropejci
+tujci <- tujci[, c(2,1)]
+# Nova tabela samo z evropejci
 evropske_drzave <- populacija$Country
-evropejci <- filter(evropejci, Country %in% evropske_drzave)
+evropejci <- filter(tujci, Country %in% evropske_drzave)
 
 
 # UVOZ  FIBA LESTVICE ZA EVROPO
@@ -115,10 +115,24 @@ populacija <- uvozi.populacijo()
 # Poimenovanje stolpcev
 names(populacija) <- c("Country", "Population")
 
-#Sedaj imam v tabeli evropejci res samo evropejce
+# Sedaj imam v tabeli evropejci res samo evropejce
 evropske_drzave <- populacija$Country
-evropejci <- filter(evropejci, Country %in% evropske_drzave)
+evropejci <- filter(tujci, Country %in% evropske_drzave)
 
+# OD TU NOVO POROČILO
 
+# Nova tabela, ki nam pove število igralcev iz posamezne države
+st.igralcev <- table(evropejci$Country)
+# Spremenim v data.frame tabelo (prej mi nekaj ni delovalo)
+st.igralcev <- as.data.frame(st.igralcev)
+# Preimenujem stolpca v novi tabeli
+names(st.igralcev)[2] <- "Players"
+names(st.igralcev)[1] <- "Country"
 
+# Spremenim tabelo placo, tako da dodam se narodnost igralcev
+# (Američani imajo NA)
+place1 <- merge(place,tujci,by="Player",all=TRUE)
+# Znak NA v stolpcu Country zamenjam z USA
+place1$Country[is.na(place1$Country)]<- "USA" # --> Vidim, da je pri nekaterih igralcih v stolpcu salary na
+# Nekaj je šlo narobe, bom ugotovil kaj :)
 
