@@ -133,6 +133,55 @@ names(st.igralcev)[1] <- "Country"
 # (Američani imajo NA)
 place1 <- merge(place,tujci,by="Player",all=TRUE)
 # Znak NA v stolpcu Country zamenjam z USA
-place1$Country[is.na(place1$Country)]<- "USA" # --> Vidim, da je pri nekaterih igralcih v stolpcu salary na
-# Nekaj je šlo narobe, bom ugotovil kaj :)
+place1$Country[is.na(place1$Country)]<- "USA" 
+# Nekateri (6 igralcev) imajo 'na' v stolpcu Salary, v prejsnjih placah, nihče ni imel 'na'. 
+
+# Npr. Dennis Schroder (place1 -> 132, place -> 71) mu kar napiše zraven še 'na' in posledično USA, čeprav je Germany.
+# Vidim: JJ Barea ima drugačno ime v obeh tabelah..
+
+
+# Uredil bom ročno (majhno število) in nato vprašal, če je to ok
+# Ker bom brisal vrstice bom dodal števila vrstic, ker jih tam na levi ne posodablja
+# Kasneje bom to izbrisal
+place1$vrstica <- seq.int(nrow(place1)) 
+# Vidim da moram to sprodi posodabljati..
+
+# Dennis Schroeder je Nemec
+place1[132,2] <- place1[133,2]
+# Sedaj izbrišem ameriškega Dennisa
+place1 <- place1[-133,]
+
+# Jose Juan Barea je iz Portorika
+place1[219,2] <- place1[294,2]
+# Izbrišem ameriškega Bareo
+place1 <- place1[-294,]
+
+# Juancho Hernangomez je Španec
+place1[306,2] <- place1[305,2]
+# Odstranim ameriškega Juanchota
+place1 <- place1[-305,]
+
+# Nene je brazilec
+place1[428,2] <- place1[427,2]
+# Odstranim ameriškega Neneja
+place1 <- place1[-427,]
+
+# Patty Mills je Avstralec
+place1[453,2] <- place1[451,2]
+# Odstranim ameriškega Pattya
+place1 <- place1[-451,]
+
+# Cabarrot je Francoz
+place1[528,2] <- place1[527,2]
+# Odstranim ameriškega Cabarrota
+place1 <- place1[-527,]
+
+# Sedaj nihče več nima 'na' pri plači :)
+
+# Posodobiim sedaj urejeno tabelo place1 v place
+place <- place1
+# Zamenjam vrstni red stolpcev, ker mi je bolj všeč, pobrišem tudi stolpec z vrsticami
+place <- place[c(1,3,2)]
+# Igralci z višjo plačo bodo na vrhu in obratno, uredim padajoče glede na plačo
+place <- place[order(place$Salary, decreasing = TRUE),]
 

@@ -12,7 +12,13 @@ ggplot(data=st.igralcev, aes(x=Country, y=Players)) + geom_boxplot()
 
 # y -> st. drzav, ki ima x igralcev; x -> st. igralcev
 ggplot(data=st.igralcev, aes(x=Players)) + geom_histogram() 
+# Prikaz s procenti na y osi in povezan s krivuljo
+ggplot(data=st.igralcev, aes(x=Players)) + geom_density()
 
 
+
+
+
+ggplot(data=statistika, aes(x=Petal.Length, fill=Species))  + geom_histogram()
 
 
