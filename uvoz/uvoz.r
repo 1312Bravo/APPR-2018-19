@@ -102,24 +102,20 @@ names(fiba.lestvica)[2] <- "Points"
 
 # UVOZ POPULACIJE EVROPSKIH DRZAV
 
-# Funkcija za uvoz podatkov o populaciji evropskih drzav iz datotetke populacija.csv (worldpopulationreview.com)
+# Funkcija za uvoz podatkov o populaciji evropskih drzav iz datotetke prebivalstvo.csv (worldpopulationreview.com)
 uvozi.populacijo <- function(populacija) {
-  tabela <- read_delim("podatki/populacija.csv", 
-                           ";", escape_double = FALSE, col_names = FALSE, 
-                           col_types = cols(`143.964.709` = col_number()), 
-                           locale = locale(decimal_mark = ",", grouping_mark = ".", 
-                                           encoding = "WINDOWS-1250"), trim_ws = TRUE)
-} 
+  tabela <- read_delim("podatki/prebivalstvo.csv", 
+                             ";", escape_double = FALSE, col_types = cols(Population = col_number()), 
+                             locale = locale(encoding = "WINDOWS-1250"), 
+                             trim_ws = TRUE)
+}
 
 # Zapis podatkov v razpredelnico populacija
 populacija <- uvozi.populacijo()
+# Izbris nepotrebnih stolpcev, ostaneta samo še država in prebivalstvo ter prve vrstice
+populacija <- populacija[-1,c(2,3)]
 # Poimenovanje stolpcev
 names(populacija) <- c("Country", "Population")
-# V stolcpu Population pravilno zapišem številke
-
-
-
-
 
 
 # Sedaj imam v tabeli evropejci res samo evropejce
@@ -190,9 +186,50 @@ place <- place[c(1,3,2)]
 # Igralci z višjo plačo bodo na vrhu in obratno, uredim padajoče glede na plačo
 place <- place[order(place$Salary, decreasing = TRUE),]
 
-# Zdruzim tabeli fiba lestvice in populacije držav
+# Zdruzim tabeli fiba lestvice in populacije držav (V novo tabelo, da lazje ugotovim kje so tezave)
 fiba.lestvica1 <- merge(fiba.lestvica, populacija, by="Country",all=TRUE)
 # Ponovno je v nekaterih vrsticah v različnih stolpcih 'na'
-# Države Armenia ni v tabeli s populacijo, poiščem število prebivalstva na internetu in vnesem ročno
-# Population of Armenia -> 3.031.669
+# Popravim ročno, morda si pomagam s spletom
 
+# Population of Armenia -> 3.031.669
+fiba.lestvica1[3,5] <- 3031669
+# Bosnia and Hercegovina :)
+fiba.lestvica1[9,5] <- fiba.lestvica1[8,5]
+# Population of Cyprus -> 1.170.125
+fiba.lestvica1[13,5] <- 1170125
+# Population of Georgia <- 3.718.200
+fiba.lestvica1[20,5] <- 3718200
+# Great Britain :)
+fiba.lestvica1[23,5] <- fiba.lestvica1[57,5]
+# Population of Azebraijan -> 9.827.589
+fiba.lestvica1[5,5] <- 9827589
+# Population of Israel -> 8.855.000 
+fiba.lestvica1[30,5] <- 8855000
+# Population of Kosovo -> 1.870.981.
+fiba.lestvica1[32,5] <- 1870981
+# MKD :)
+fiba.lestvica1[38,5] <- fiba.lestvica1[55,5]
+# Population of Turkey -> 80.810.525
+fiba.lestvica1[56,5] <- 1870981
+# Zbrišem Channel Bosnia & Hercegovina, Channel Islands, Fareoe Islands, Isle of man,
+# Liechtenstein, Monaco, MKD, U.K.
+# Morda se, da tudi lažje
+fiba.lestvica1 <- fiba.lestvica1[-c(8,11,17,25,29,34,40,55,57),]
+# Izbrišem vrstice, ki imajo v stolpcu Points vrednost 'na'
+# fiba.lestvica1 <- fiba.lestvica1[-c(fiba.lestvica1$Points[is.na(fiba.lestvica1$Points)]),]
+# Ni okej
+
+# Sedaj znova shranim tabelo pod fiba.lestvica :)
+fiba.lestvica <- fiba.lestvica1
+
+# lestvico združim s številom igralcev v posamezni državi 
+fiba.lestvica <- merge(fiba.lestvica, st.igralcev, by="Country",all=TRUE)
+# Kjer so 'na' vstavim 0
+fiba.lestvica$Players[is.na(fiba.lestvica$Players)]<- 0
+
+# Statistika igralcev glede na: stevila odigranih minut, stevilo tekem, stevilo metov, stevilo zacetih tekem.
+# Ta statistika najbolj pove pomembnost igralca pri ekipi in njihovo zaupanje vanj.
+statistika.zaupanja <- statistika[,c(1,3,4,5,6)]
+# Dodal ji bom stolpec z narodnostjo, doda se tudi stolpec s placo, ki je tukaj zelo pomemben
+statistika.zaupanja <- merge(statistika.zaupanja, place, by="Player",all=TRUE)
+# Nekje je ponovno 'na' -> vprašaj!
