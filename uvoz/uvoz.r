@@ -105,15 +105,22 @@ names(fiba.lestvica)[2] <- "Points"
 # Funkcija za uvoz podatkov o populaciji evropskih drzav iz datotetke populacija.csv (worldpopulationreview.com)
 uvozi.populacijo <- function(populacija) {
   tabela <- read_delim("podatki/populacija.csv", 
-                           ";", col_names = FALSE, 
-                           col_types = cols(X2 = col_number()), 
-                           locale = locale(encoding = "WINDOWS-1250"))
-}
+                           ";", escape_double = FALSE, col_names = FALSE, 
+                           col_types = cols(`143.964.709` = col_number()), 
+                           locale = locale(decimal_mark = ",", grouping_mark = ".", 
+                                           encoding = "WINDOWS-1250"), trim_ws = TRUE)
+} 
 
 # Zapis podatkov v razpredelnico populacija
 populacija <- uvozi.populacijo()
 # Poimenovanje stolpcev
 names(populacija) <- c("Country", "Population")
+# V stolcpu Population pravilno zapišem številke
+
+
+
+
+
 
 # Sedaj imam v tabeli evropejci res samo evropejce
 evropske_drzave <- populacija$Country
@@ -182,4 +189,10 @@ place <- place[-527,]
 place <- place[c(1,3,2)]
 # Igralci z višjo plačo bodo na vrhu in obratno, uredim padajoče glede na plačo
 place <- place[order(place$Salary, decreasing = TRUE),]
+
+# Zdruzim tabeli fiba lestvice in populacije držav
+fiba.lestvica1 <- merge(fiba.lestvica, populacija, by="Country",all=TRUE)
+# Ponovno je v nekaterih vrsticah v različnih stolpcih 'na'
+# Države Armenia ni v tabeli s populacijo, poiščem število prebivalstva na internetu in vnesem ročno
+# Population of Armenia -> 3.031.669
 
