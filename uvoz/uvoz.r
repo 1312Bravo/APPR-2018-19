@@ -229,7 +229,10 @@ fiba.lestvica$Players[is.na(fiba.lestvica$Players)]<- 0
 
 # Statistika igralcev glede na: stevila odigranih minut, stevilo tekem, stevilo metov, stevilo zacetih tekem.
 # Ta statistika najbolj pove pomembnost igralca pri ekipi in njihovo zaupanje vanj.
-statistika.zaupanja <- statistika[,c(1,3,4,5,6)]
+statistika.zaupanja <- statistika %>% group_by(Player) %>%
+  summarise(G=sum(G), GS=sum(GS), MP=sum(MP), FGA=sum(FGA))
+
 # Dodal ji bom stolpec z narodnostjo, doda se tudi stolpec s placo, ki je tukaj zelo pomemben
-statistika.zaupanja <- merge(statistika.zaupanja, place, by="Player",all=TRUE)
+statistika.zaupanja1 <- inner_join(place, statistika.zaupanja, by="Player")
 # Nekje je ponovno 'na' -> vprašaj!
+
