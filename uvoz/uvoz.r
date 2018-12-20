@@ -226,13 +226,17 @@ fiba.lestvica <- fiba.lestvica1
 fiba.lestvica <- merge(fiba.lestvica, st.igralcev, by="Country",all=TRUE)
 # Kjer so 'na' vstavim 0
 fiba.lestvica$Players[is.na(fiba.lestvica$Players)]<- 0
+# Izračunam
 
-# Statistika igralcev glede na: stevila odigranih minut, stevilo tekem, stevilo metov, stevilo zacetih tekem.
+# Statistika igralcev glede na: stevila odigranih minut, stevilo tekem, stevilo metov in stevilo zacetih tekem.
 # Ta statistika najbolj pove pomembnost igralca pri ekipi in njihovo zaupanje vanj.
+# naredim novo tabelo, dobljeno iz tabele statistika, v kateri vzamem potrebne stolpce
+# V stolpcu Player se nekateri igralci pojavijo veckrat, zato njihovo statistiko seštejem saj to pri tej statistiki pride v poštev.
 statistika.zaupanja <- statistika %>% group_by(Player) %>%
   summarise(G=sum(G), GS=sum(GS), MP=sum(MP), FGA=sum(FGA))
 
 # Dodal ji bom stolpec z narodnostjo, doda se tudi stolpec s placo, ki je tukaj zelo pomemben
-statistika.zaupanja1 <- inner_join(place, statistika.zaupanja, by="Player")
-# Nekje je ponovno 'na' -> vprašaj!
+# Z inner_join ohranim samo tiste igralce, ki se ujemajo v obeh tabelah :
+statistika.zaupanja <- inner_join(place, statistika.zaupanja, by="Player")
+
 
