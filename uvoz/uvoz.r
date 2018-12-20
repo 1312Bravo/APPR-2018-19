@@ -2,7 +2,6 @@
 
 # separate, fill, melt (>?separate)
 
-sl <- locale("sl", decimal_mark=",", grouping_mark=".")
 source("lib/libraries.r", encoding="UTF-8")
 library(tidyr)
 library(readxl)
@@ -10,6 +9,7 @@ library(data.table)
 library(dplyr)
 library(readr)
 library(ggplot2)
+sl <- locale("sl", decimal_mark=",", grouping_mark=".")
 
 # UVOZ STATISTIKE
 
@@ -22,8 +22,12 @@ uvozi.statistiko <- function() {
 statistika <- uvozi.statistiko()
 # Pobrisan prvi stolpec z imenom Rk (ranking)
 statistika <- statistika[,-1]
+# Izbrisem zadnjo vrstico
+statistika <- statistika[-nrow(statistika),]
 # Urejen stolpec Player, ki sedaj vsebuje samo imena
 statistika$Player = gsub("^(.*)\\\\.*", "\\1", statistika$Player)
+# Pri nekaterih je v stolpcu FTA 'na', to zamenjam z 0.
+statistika$FTA[is.na(statistika$FTA)]<- 0
 
 # UVOZ PLAC
 
@@ -226,17 +230,33 @@ fiba.lestvica <- fiba.lestvica1
 fiba.lestvica <- merge(fiba.lestvica, st.igralcev, by="Country",all=TRUE)
 # Kjer so 'na' vstavim 0
 fiba.lestvica$Players[is.na(fiba.lestvica$Players)]<- 0
-# Izračunam
+
 
 # Statistika igralcev glede na: stevila odigranih minut, stevilo tekem, stevilo metov in stevilo zacetih tekem.
 # Ta statistika najbolj pove pomembnost igralca pri ekipi in njihovo zaupanje vanj.
 # naredim novo tabelo, dobljeno iz tabele statistika, v kateri vzamem potrebne stolpce
-# V stolpcu Player se nekateri igralci pojavijo veckrat, zato njihovo statistiko seštejem saj to pri tej statistiki pride v poštev.
-statistika.zaupanja <- statistika %>% group_by(Player) %>%
-  summarise(G=sum(G), GS=sum(GS), MP=sum(MP), FGA=sum(FGA))
+
+# V stolpcu Player se nekateri igralci pojavijo večkrat
+# vrstica z največjo številko v stolpcu G je vrstica, ki jo je treba upoštevati, ostale izbrišemo 
+statistika <- statistika %>% distinct(Player, .keep_all = TRUE)
+
+#Ustvarim novo tabelo statistike zaupanja, s podatki, ki o zaupanju ekipe igralcu povejo največ
+statistika.zaupanja <- statistika[,c(1,3,4,5,6)]
 
 # Dodal ji bom stolpec z narodnostjo, doda se tudi stolpec s placo, ki je tukaj zelo pomemben
 # Z inner_join ohranim samo tiste igralce, ki se ujemajo v obeh tabelah :
 statistika.zaupanja <- inner_join(place, statistika.zaupanja, by="Player")
 
 
+
+# V tabelo statistike zaupanja dodam rank igralcev glede na posamezno meritev
+statistika.zaupanja  <- statistika.zaupanja %>% 
+  arrange(desc(Salary)) %>% mutate(Salary.rank = 1:nrow(.)) %>%
+  arrange(desc(G)) %>% mutate(GamesPlayed.rank = 1:nrow(.)) %>% 
+  arrange(desc(GS)) %>% mutate(GamesStarted.rank = 1:nrow(.)) %>%
+  arrange(desc(MP)) %>% mutate(MinutesPlayed.rank = 1:nrow(.)) %>% 
+  arrange(desc(FGA)) %>% mutate(FieldGoalAttempts.rank = 1:nrow(.))
+  
+# Sedaj imam tabelo zaupanja v kateri so samo evropejci in njihov ranking glede na določene meritve
+zaupanje.evropejcem <- filter(statistika.zaupanja, Country %in% fiba.lestvica$Country)
+zaupanje.evropejcem <- zaupanje.evropejcem[,-c(4:7)]
