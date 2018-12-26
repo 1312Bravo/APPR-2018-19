@@ -231,6 +231,13 @@ fiba.lestvica <- fiba.lestvica1
 fiba.lestvica <- merge(fiba.lestvica, st.igralcev, by="Country",all=TRUE)
 # Kjer so 'na' vstavim 0
 fiba.lestvica$Players[is.na(fiba.lestvica$Players)]<- 0
+fiba.lestvica <- fiba.lestvica %>% arrange(Worldrank)
+# Naredim nov stolpec v katerem je število igralcev glede na 10 milijonov prebivalcev
+fiba.lestvica$PlayersPer10Million <- (fiba.lestvica$Players / fiba.lestvica$Population) * 10000000 %>%
+  as.numeric(fiba.lestvica$PlayersPer10Million)
+# fiba lestvica v kateri so samo države, ki imajo NBA igralce
+fiba.lestvicaNBA <- filter(fiba.lestvica, fiba.lestvica$Players > 0)
+
 
 
 # Statistika igralcev glede na: stevila odigranih minut, stevilo tekem, stevilo metov in stevilo zacetih tekem.
@@ -260,7 +267,7 @@ statistika.zaupanja  <- statistika.zaupanja %>%
 
 # Sedaj imam tabelo zaupanja v kateri so samo evropejci in njihov ranking glede na določene meritve
 zaupanje.evropejcem <- filter(statistika.zaupanja, Country %in% fiba.lestvica$Country)
-zaupanje.evropejcem <- zaupanje.evropejcem[,-c(4:7)]
+zaupanje.evropejcem <- zaupanje.evropejcem[,-c(3:7)]
 
 # Ustvarim novo tabelo statistika.ucinkovitosti, s podatki o doprinosu igralca ekipi
 statistika.ucinkovitosti <- statistika[,c(1,5,7,9:14,16)]
@@ -296,3 +303,4 @@ statistika.ucinkovitosti  <- statistika.ucinkovitosti %>%
 # Sedaj imam tabelo ucinkovitosti v kateri so samo evropejci in njihov ranking glede na določene meritve
 ucinkovitost.evropejcev <- filter(statistika.ucinkovitosti, Country %in% fiba.lestvica$Country)
 ucinkovitost.evropejcev <- ucinkovitost.evropejcev[,-c(3:10)]
+
