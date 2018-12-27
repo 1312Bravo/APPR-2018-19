@@ -129,3 +129,4 @@ evropejci <- filter(tujci, Country %in% evropske_drzave)
 
 # OD TU NOVO POROČILO
 
+
