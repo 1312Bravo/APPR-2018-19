@@ -80,9 +80,6 @@ tujci <- tujci[ ,-c(3,4)]
 tujci <- tujci %>% mutate(Player = gsub("_", " ", Player))
 # Zamenjava vrstnega reda stolpcev
 tujci <- tujci[, c(2,1)]
-# Nova tabela samo z evropejci
-evropske_drzave <- populacija$Country
-evropejci <- filter(tujci, Country %in% evropske_drzave)
 
 
 # UVOZ  FIBA LESTVICE ZA EVROPO
@@ -108,7 +105,7 @@ names(fiba.lestvica)[2] <- "Points"
 # UVOZ POPULACIJE EVROPSKIH DRZAV
 
 # Funkcija za uvoz podatkov o populaciji evropskih drzav iz datotetke prebivalstvo.csv (worldpopulationreview.com)
-uvozi.populacijo <- function(populacija) {
+uvozi.populacijo <- function() {
   tabela <- read_delim("podatki/prebivalstvo.csv", 
                        ";", escape_double = FALSE, col_types = cols(Population = col_number()), 
                        locale = locale(encoding = "WINDOWS-1250"), 

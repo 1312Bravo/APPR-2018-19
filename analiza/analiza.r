@@ -1,5 +1,7 @@
 # 4. faza: Analiza podatkov
 
+source("uvoz/uvoz.r")
+
 # Nova tabela, ki nam pove število igralcev iz posamezne države
 #st.igralcev <- table(evropejci$Country)
 #st.igralcev <- as.data.frame(st.igralcev)
