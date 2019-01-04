@@ -121,10 +121,15 @@ populacija <- uvozi.populacijo()
 populacija <- populacija[-1,c(2,3)]
 # Poimenovanje stolpcev
 names(populacija) <- c("Country", "Population")
-
+# Dodam Turčijo
+populacija[49,1] <- "Turkey"
+populacija[49,2] <- 80810525
 
 # Sedaj imam v tabeli evropejci res samo evropejce
+# Tu ni Turčije
 evropske_drzave <- populacija$Country
+evropske_drzave[29] <- "Bosnia and Herzegovina"
+evropske_drzave <- c(evropske_drzave, "Turkey")
 evropejci <- filter(tujci, Country %in% evropske_drzave)
 
 # OD TU NOVO POROČILO

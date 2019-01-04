@@ -1,13 +1,9 @@
 # 4. faza: Analiza podatkov
 
 # Nova tabela, ki nam pove število igralcev iz posamezne države
-st.igralcev <- table(evropejci$Country)
-# Spremenim v data.frame tabelo (prej mi nekaj ni delovalo)
-st.igralcev <- as.data.frame(st.igralcev)
-# Preimenujem stolpca v novi tabeli
-names(st.igralcev)[2] <- "Players"
-names(st.igralcev)[1] <- "Country"
-
+#st.igralcev <- table(evropejci$Country)
+#st.igralcev <- as.data.frame(st.igralcev)
+#colnames(st.igralcev) <- c("Country", "Players")
 # Spremenim tabelo placo, tako da dodam se narodnost igralcev
 # (Američani imajo NA)
 place <- merge(place,tujci,by="Player",all=TRUE)
@@ -85,8 +81,6 @@ fiba.lestvica1[30,5] <- 8855000
 fiba.lestvica1[32,5] <- 1870981
 # MKD :)
 fiba.lestvica1[38,5] <- fiba.lestvica1[55,5]
-# Population of Turkey -> 80.810.525
-fiba.lestvica1[56,5] <- 1870981
 # Zbrišem Channel Bosnia & Hercegovina, Channel Islands, Fareoe Islands, Isle of man,
 # Liechtenstein, Monaco, MKD, U.K.
 # Morda se, da tudi lažje
@@ -97,7 +91,6 @@ fiba.lestvica1 <- fiba.lestvica1[-c(8,11,17,25,29,34,40,55,57),]
 
 # Sedaj znova shranim tabelo pod fiba.lestvica :)
 fiba.lestvica <- fiba.lestvica1
-
 # lestvico združim s številom igralcev v posamezni državi 
 fiba.lestvica <- merge(fiba.lestvica, st.igralcev, by="Country",all=TRUE)
 # Kjer so 'na' vstavim 0
@@ -108,8 +101,6 @@ fiba.lestvica$PlayersPer10Million <- (fiba.lestvica$Players / fiba.lestvica$Popu
   as.numeric(fiba.lestvica$PlayersPer10Million)
 # fiba lestvica v kateri so samo države, ki imajo NBA igralce
 fiba.lestvicaNBA <- filter(fiba.lestvica, fiba.lestvica$Players > 0)
-
-
 
 # Statistika igralcev glede na: stevila odigranih minut, stevilo tekem, stevilo metov in stevilo zacetih tekem.
 # Ta statistika najbolj pove pomembnost igralca pri ekipi in njihovo zaupanje vanj.
@@ -175,3 +166,8 @@ statistika.ucinkovitosti  <- statistika.ucinkovitosti %>%
 ucinkovitost.evropejcev <- filter(statistika.ucinkovitosti, Country %in% fiba.lestvica$Country)
 ucinkovitost.evropejcev <- ucinkovitost.evropejcev[,-c(3:10)]
 
+# Nova tabela, ki pove število igralcev iz posamezne države (Mogoče imam že)
+# Za vizualizacijo!!
+st.igralcev <- fiba.lestvica[,c(1,6)]
+st.igralcev[23,1] <-"Bosnia and Herz."
+st.igralcev[22,1] <- "Macedonia" 
