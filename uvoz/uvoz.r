@@ -28,6 +28,9 @@ statistika <- statistika[-nrow(statistika),]
 statistika$Player = gsub("^(.*)\\\\.*", "\\1", statistika$Player)
 # Pri nekaterih je v stolpcu FTA in FT% 'na', to zamenjam z 0.
 statistika$FTA[is.na(statistika$FTA)]<- 0
+# V stolpcu Player se nekateri igralci pojavijo večkrat
+# vrstica z največjo številko v stolpcu G je vrstica, ki jo je treba upoštevati, ostale izbrišemo 
+statistika <- statistika %>% distinct(Player, .keep_all = TRUE)
 
 # UVOZ PLAC
 
@@ -129,6 +132,5 @@ evropske_drzave[29] <- "Bosnia and Herzegovina"
 evropske_drzave <- c(evropske_drzave, "Turkey")
 evropejci <- filter(tujci, Country %in% evropske_drzave)
 
-# OD TU NOVO POROČILO
 
 

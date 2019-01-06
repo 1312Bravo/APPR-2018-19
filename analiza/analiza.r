@@ -2,10 +2,6 @@
 
 source("uvoz/uvoz.r")
 
-# Nova tabela, ki nam pove število igralcev iz posamezne države
-#st.igralcev <- table(evropejci$Country)
-#st.igralcev <- as.data.frame(st.igralcev)
-#colnames(st.igralcev) <- c("Country", "Players")
 # Spremenim tabelo placo, tako da dodam se narodnost igralcev
 # (Američani imajo NA)
 place <- merge(place,tujci,by="Player",all=TRUE)
@@ -90,10 +86,15 @@ fiba.lestvica1 <- fiba.lestvica1[-c(8,11,17,25,29,34,40,55,57),]
 # Izbrišem vrstice, ki imajo v stolpcu Points vrednost 'na'
 # fiba.lestvica1 <- fiba.lestvica1[-c(fiba.lestvica1$Points[is.na(fiba.lestvica1$Points)]),]
 # Ni okej
-
 # Sedaj znova shranim tabelo pod fiba.lestvica :)
 fiba.lestvica <- fiba.lestvica1
-# lestvico združim s številom igralcev v posamezni državi 
+
+# Nova tabela, ki pove število igralcev iz posamezne države
+st.igralcev <- table(evropejci$Country)
+st.igralcev <- as.data.frame(st.igralcev)
+colnames(st.igralcev) <- c("Country", "Players")
+
+# lestvico združim s številom igralcev v posamezni državi
 fiba.lestvica <- merge(fiba.lestvica, st.igralcev, by="Country",all=TRUE)
 # Kjer so 'na' vstavim 0
 fiba.lestvica$Players[is.na(fiba.lestvica$Players)]<- 0
@@ -107,10 +108,6 @@ fiba.lestvicaNBA <- filter(fiba.lestvica, fiba.lestvica$Players > 0)
 # Statistika igralcev glede na: stevila odigranih minut, stevilo tekem, stevilo metov in stevilo zacetih tekem.
 # Ta statistika najbolj pove pomembnost igralca pri ekipi in njihovo zaupanje vanj.
 # naredim novo tabelo, dobljeno iz tabele statistika, v kateri vzamem potrebne stolpce
-
-# V stolpcu Player se nekateri igralci pojavijo večkrat
-# vrstica z največjo številko v stolpcu G je vrstica, ki jo je treba upoštevati, ostale izbrišemo 
-statistika <- statistika %>% distinct(Player, .keep_all = TRUE)
 
 #Ustvarim novo tabelo statistike zaupanja, s podatki, ki o zaupanju ekipe igralcu povejo največ
 statistika.zaupanja <- statistika[,c(1,3,4,5,6)]
@@ -167,9 +164,3 @@ statistika.ucinkovitosti  <- statistika.ucinkovitosti %>%
 # Sedaj imam tabelo ucinkovitosti v kateri so samo evropejci in njihov ranking glede na določene meritve
 ucinkovitost.evropejcev <- filter(statistika.ucinkovitosti, Country %in% fiba.lestvica$Country)
 ucinkovitost.evropejcev <- ucinkovitost.evropejcev[,-c(3:10)]
-
-# Nova tabela, ki pove število igralcev iz posamezne države (Mogoče imam že)
-# Za vizualizacijo!!
-st.igralcev <- fiba.lestvica[,c(1,6)]
-st.igralcev[23,1] <-"Bosnia and Herz."
-st.igralcev[22,1] <- "Macedonia" 

@@ -8,7 +8,7 @@ library(ggplot2)
 library(munsell)
 
 # Uvozimo zemljevid Sveta
-zemljevid <- uvozi.zemljevid("https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/110m/cultural/ne_110m_admin_0_countries.zip",
+zemljevid <- uvozi.zemljevid("https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/cultural/ne_50m_admin_0_countries.zip",
                              "ne_110m_admin_0_countries") %>%
   fortify()
 
@@ -36,19 +36,21 @@ ggplot(Evropa, aes(x=long, y=lat, group=group, fill=NAME)) +
   theme(legend.position="none")
  
 
-# Izrišem zemljevid Evrope, v katerem bo vsaka država pobarvana glede na povprečno število igralcev zaokroženo na 10 milijonov prebivalcev
-# Število igralcev zaokrožim na celo število
+# Da bom lahko povezoval zemljevid evrope z mojimi tabelami moram nekatere vrstice preimenovati v tabeli st.igralcev
+# Naredim novo tabelo, da ne bo prihajalo do težav kasneje
+st.igralcev.eu <- st.igralcev
+st.igralcev[23,1] <-"Bosnia and Herz."
+st.igralcev[22,1] <- "Macedonia" 
 
-# Da bom lahko povezoval zemljevid evrope z mojimi tabelami moram nekatere vrstice preimenovati
-# v mojih tabelah
-ujemanje <- left_join(drzave, st.igralcev, by="Country")
+ujemanje <- left_join(drzave, st.igralcev.eu, by="Country")
 ujemanje[32,2] <- 1
 ujemanje[27,2] <- 0
 
 # Izrišem zemljevid Evrope, v katerem bo vsaka država pobarvana glede št. igralcev v ligi NBA
-
 ggplot() + geom_polygon(data=left_join(Evropa, ujemanje, by=c("NAME"="Country")),
-                        aes(x=long, y=lat, group=group, fill=Players)) 
+                        aes(x=long, y=lat, group=group, fill=Players)) +
+  ggtitle("Število NBA igralcev v posamezni državi") + xlab("") + ylab("") +
+  guides(fill=guide_colorbar(title="Št. igralcev"))
   
   
   
