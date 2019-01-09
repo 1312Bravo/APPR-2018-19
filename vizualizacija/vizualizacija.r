@@ -19,7 +19,9 @@ Evropa <- filter(Evropa, long < 55 & long > -45 & lat > 30 & lat < 85)
 
 # Narišemo zemljevid Evrope
 #dev.off()
-ggplot() + geom_polygon(data = Evropa, aes(x=long, y=lat, group=group,fill=id)) 
+#ggplot() + geom_polygon(data = Evropa, aes(x=long, y=lat, group=group,fill=id)) +
+#  theme(legend.position="none")
+  
 # Drzave v zemljevidu Evrope
 drzave <- unique(Evropa$NAME) 
 drzave <- as.data.frame(drzave, stringsAsFactors=FALSE) 
@@ -39,12 +41,13 @@ ggplot(Evropa, aes(x=long, y=lat, group=group, fill=NAME)) +
 # Da bom lahko povezoval zemljevid evrope z mojimi tabelami moram nekatere vrstice preimenovati v tabeli st.igralcev
 # Naredim novo tabelo, da ne bo prihajalo do težav kasneje
 st.igralcev.eu <- st.igralcev
-st.igralcev[23,1] <-"Bosnia and Herz."
-st.igralcev[22,1] <- "Macedonia" 
+st.igralcev.eu <- as.data.frame(st.igralcev.eu, stringsAsFactors=FALSE)
+colnames(st.igralcev.eu) <- c("Country", "Players")
+st.igralcev.eu[2,1] <- "Bosnia and Herz."
+st.igralcev.eu[4,1] <- "Czechia" 
 
 ujemanje <- left_join(drzave, st.igralcev.eu, by="Country")
-ujemanje[32,2] <- 1
-ujemanje[27,2] <- 0
+ujemanje$Players[is.na(ujemanje$Players)]<- 0
 
 # Izrišem zemljevid Evrope, v katerem bo vsaka država pobarvana glede št. igralcev v ligi NBA
 ggplot() + geom_polygon(data=left_join(Evropa, ujemanje, by=c("NAME"="Country")),
@@ -53,7 +56,7 @@ ggplot() + geom_polygon(data=left_join(Evropa, ujemanje, by=c("NAME"="Country"))
   guides(fill=guide_colorbar(title="Št. igralcev"))
   
   
-  
+
 # Razlikovanje od povprečja pri številu igralcev na 10 mills
 #povprecje <- mean(fiba.lestvicaNBA$PlayersPer10Million)
 #odstopanje <- ujemanje

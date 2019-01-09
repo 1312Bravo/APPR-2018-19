@@ -124,7 +124,7 @@ Na koncu tabelo 'statistika.zaupanja' filtrirano, tako da so v njej samo še evr
 V tabeli 'zaupanje.evropejcem' na koncu ostanejo samo še stolpci z imeni igralcev, njihovo narodnostjo in rangom glede na:
 število odigranih minut, število tekem, število metov in število začetih tekem.
 
-- UCINKOVITOST EVROPEJCEV
+- UCINKOVITOST.EVROPEJCEV'
 Tabela 'ucinkovitost.evropejcev' nastane po podobnem postopku kot 'zaupanje.evropejcem'.
 V njej so stolpci z imeni igralcev, njihovo narodnostjo in rangom glede na:
 učinkovitost meta, učinkovitost pri prostih metih, točkah'x', skokih'x', podajah'x', ukradenih točkah'x', izgubljenih žogah'x'
