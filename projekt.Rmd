@@ -7,7 +7,7 @@ output:
     includes:
       in_header: lib/styles.sty
     latex_engine: xelatex
----
+--- 
 
 ```{r setup, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
 # Če želimo nastaviti pisave v PDF-ju, odkomentiramo
@@ -34,7 +34,7 @@ Primerjava je narejena glede na sezono 2017/18.
 
 # Obdelava, uvoz in čiščenje podatkov
 
-```{r uvoz, echo=FALSE, message=FALSE}
+```{r uvoz, echo=FALSE, message=FALSE, warning=FALSE}
 source("uvoz/uvoz.r", encoding="UTF-8")
 ```
 
@@ -89,8 +89,8 @@ Tri tabele so uvožene v obliki HTML iz zgoraj naštetih spletnih strani -> fiba
 Spodnji graf prikazuje porazdelitev števila naselij v občinah.
 
 ```{r histogram, echo=FALSE, message=FALSE, fig.align='center', fig.cap='Histogram števila naselij v občinah'}
-ggplot(obcine, aes(x=naselja)) + geom_histogram() +
-  ggtitle("Pogostost števila naselij") + xlab("Število naselij") + ylab("Število občin")
+#ggplot(obcine, aes(x=naselja)) + geom_histogram() +
+#  ggtitle("Pogostost števila naselij") + xlab("Število naselij") + ylab("Število občin")
 ```
 
 ***
@@ -141,6 +141,7 @@ učinkovitost meta, učinkovitost pri prostih metih, točkah'x', skokih'x', poda
 # Vizualizacija podatkov
 
 ```{r vizualizacija, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+source("analiza/analiza.r", encoding="UTF-8")
 source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 ```
 
@@ -157,24 +158,21 @@ ggplot() + geom_polygon(data=left_join(Evropa, ujemanje, by=c("NAME"="Country"))
 
 # Napredna analiza podatkov
 
-```{r analiza, echo=FALSE, message=FALSE}
-source("analiza/analiza.r", encoding="UTF-8")
-```
 
 Spodnji graf prikazuje povezavo med številom naselij in površino občine.
 
 ```{r graf, echo=FALSE, fig.align='center', fig.cap='Povezava med številom naselij in površino občine'}
-ggplot(inner_join(obcine, data.frame(obcina=names(skupine),
-                                     skupina=factor(skupine)), by="obcina")
-, aes(x=povrsina, y=naselja, color=skupina, size=prebivalci/1000)) + geom_point() +
-  ggtitle("Število naselij glede na površino občine") +
-  xlab(expression("Površina (km"^2 * ")")) + ylab("Št. naselij") +
-  guides(color=guide_legend(title="Skupina"),
-         size=guide_legend(title="Prebivalci (* 1000)"))
+#ggplot(inner_join(obcine, data.frame(obcina=names(skupine),
+#                                     skupina=factor(skupine)), by="obcina")
+#, aes(x=povrsina, y=naselja, color=skupina, size=prebivalci/1000)) + geom_point() +
+#  ggtitle("Število naselij glede na površino občine") +
+#  xlab(expression("Površina (km"^2 * ")")) + ylab("Št. naselij") +
+#  guides(color=guide_legend(title="Skupina"),
+#         size=guide_legend(title="Prebivalci (* 1000)"))
 ```
 
 ***
 
 ```{r shiny, echo=FALSE}
-shinyAppDir("shiny", options=list(width="100%", height=600))
+#shinyAppDir("shiny", options=list(width="100%", height=600))
 ```

@@ -1,6 +1,6 @@
 # 4. faza: Analiza podatkov
 
-source("uvoz/uvoz.r")
+#source("uvoz/uvoz.r") # Če kličem tukaj v poročilu ne, nekej tazga..
 
 # Spremenim tabelo placo, tako da dodam se narodnost igralcev
 # (Američani imajo NA)

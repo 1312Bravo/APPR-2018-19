@@ -7,9 +7,12 @@ library(reshape2)
 library(ggplot2)
 library(munsell)
 
+
+
+
 # Uvozimo zemljevid Sveta
 zemljevid <- uvozi.zemljevid("https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/50m/cultural/ne_50m_admin_0_countries.zip",
-                             "ne_110m_admin_0_countries") %>%
+                             "ne_50m_admin_0_countries") %>%
   fortify()
 
 
@@ -52,14 +55,10 @@ ujemanje$Players[is.na(ujemanje$Players)]<- 0
 # Izrišem zemljevid Evrope, v katerem bo vsaka država pobarvana glede št. igralcev v ligi NBA
 ggplot() + geom_polygon(data=left_join(Evropa, ujemanje, by=c("NAME"="Country")),
                         aes(x=long, y=lat, group=group, fill=Players)) +
-  ggtitle("Število NBA igralcev v posamezni državi") + xlab("") + ylab("") +
-  guides(fill=guide_colorbar(title="Št. igralcev"))
+  ggtitle("Number of NBA players in each country") + xlab("") + ylab("") +
+  guides(fill=guide_colorbar(title="Number of players"))
   
   
 
-# Razlikovanje od povprečja pri številu igralcev na 10 mills
-#povprecje <- mean(fiba.lestvicaNBA$PlayersPer10Million)
-#odstopanje <- ujemanje
-#odstopanje$PlayersPer10Million <- odstopanje$PlayersPer10Million - povprecje
 
 

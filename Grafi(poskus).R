@@ -51,9 +51,9 @@ minuteVsplacetocke <- minuteVsplacetocke[,c(1,3,6,11)]
 
 ggplot(data=minuteVsplacetocke, aes(x=MinutesPlayed.rank))+
   geom_point(aes(y=Points.rank), colour="red") +
-  geom_point(aes(y=Salary.rank), colour="green") +
+  geom_line(aes(y=MinutesPlayed.rank), colour="green") +
   geom_line(aes(y=povprecni.rang), colour="blue") +
-  labs(title= "Points per minute, salary rank") 
+  labs(title= "Points, minutes played, salary (rank)") 
 
 
 
@@ -64,7 +64,7 @@ fiba.lestvica.plot[3] <- fiba.lestvica.plot[3] / 10000000
 
 ggplot(data=fiba.lestvica.plot, aes(x=Europerank)) + 
   geom_line(aes(y=Population), colour="red") + 
-  geom_line(aes(y=Players), colour="green") 
+  geom_point(aes(y=Players), colour="green") 
 
 
 
@@ -74,18 +74,27 @@ povprecni.rang <- ((540*541)/2) / 540 # Logično: 270.5
 
 # Graf, glede na povprečje
 # X os ni važna, izbriši?
+library(tidyverse)
+
 plot1 <- inner_join(zaupanje.evropejcem, ucinkovitost.evropejcev, by="Player")
 plot1 <- plot1[,c(1,3,6,9,11)]
 
+library(reshape2)
+plot1.tidy <- melt(plot1, id.vars="Player", measure.vars=colnames(plot1)[-1])
 
-ggplot(data=plot1, aes(x=Points.rank), col=supp) +
-  geom_point(aes(y=EffectiveFieldGoal.rank), colour="red") +
-  geom_line(aes(y=povprecni.rang), colour="green") + 
-  labs(title="Relative to the average rank") +
-  geom_point(aes(y=Salary.rank))
+#plot1.tidy <- (gather(plot1.tidy, key="Player"colnames(plot1.tidy)))
+
+ggplot(data=plot1.tidy %>% filter(variable == "Points.rank") %>%
+         transmute(Player, Points.rank=value) %>%
+         inner_join(plot1.tidy %>%
+                      filter(variable %in% c("EffectiveFieldGoal.rank", "Salary.rank"))),
+       aes(x=Points.rank, y=value, colour=variable)) +
+  geom_point() +
+  geom_hline(yintercept=povprecni.rang, colour="green") + 
+  labs(title="Relative to the average rank")
                                         
 
-  
+  ggplot(data=plot1.tidy %>% filter(variable != "MinutesPlayed.rank"), aes(x= filter(plot1.tidy, variable == "Points.rank")$value))
 
 
 # Razlikovanje od povprečja pri številu igralcev na 10 mills
