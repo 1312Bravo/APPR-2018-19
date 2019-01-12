@@ -45,6 +45,7 @@ Dve tabeli sta uvoženi v obliki csv -> statistika, populacija.
 Tri tabele so uvožene v obliki HTML iz zgoraj naštetih spletnih strani -> fiba.lestvica, evropejci, place
 
 1.'statistika' -> Podatki o splosni statistiki vseh igralcev skozi celotno sezono
+
   - `Player` - spremenljivka: ime igralca [character]
   - `Pos` - spremenljivka: pozicija na kateri igralec igra: PG, SG, SF, PF, C [character],
   - `G` - spremenljivka: število odigranih tekem [numeric],
@@ -83,15 +84,6 @@ Tri tabele so uvožene v obliki HTML iz zgoraj naštetih spletnih strani -> fiba
   - `Country` - spremenljivka: ime države [character]
   - `Population` - spremenljivka: število prebivalcev posamezne države [numeric]
 
-
- 
-
-Spodnji graf prikazuje porazdelitev števila naselij v občinah.
-
-```{r histogram, echo=FALSE, message=FALSE, fig.align='center', fig.cap='Histogram števila naselij v občinah'}
-#ggplot(obcine, aes(x=naselja)) + geom_histogram() +
-#  ggtitle("Pogostost števila naselij") + xlab("Število naselij") + ylab("Število občin")
-```
 
 ***
 
@@ -140,10 +132,39 @@ učinkovitost meta, učinkovitost pri prostih metih, točkah'x', skokih'x', poda
 
 # Vizualizacija podatkov
 
+
 ```{r vizualizacija, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 source("analiza/analiza.r", encoding="UTF-8")
 source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 ```
+
+
+Spodnji graf prikazuje razmerjem med plačo in odstotkom meta igralcev.
+
+```{r glede na povprečje, echo=FALSE, message=FALSE, fig.align='center', fig.cap='povezava med plačo in odstotkom meta igralcev, glede na povprečje'}
+ggplot(data=plot1.tidy %>% filter(variable == "Points.rank") %>%
+         transmute(Player, Points.rank=value) %>%
+         inner_join(plot1.tidy %>%
+                      filter(variable %in% c("EffectiveFieldGoal.rank", "Salary.rank"))),
+       aes(x=Points.rank, y=value, colour=variable)) +
+  geom_point() +
+  geom_hline(yintercept=povprecni.rang, colour="green") + 
+  labs(title="Relative to the average rank")
+```
+
+Spodnji graf prikazuje povezavo številom igralcev v NBA in populacijo držav.
+
+```{r fiba.lestvica populacija, echo=FALSE, message=FALSE, fig.align='center', fig.cap='povezava med številom igralcev in populacijo'}
+ggplot(data=plot2.tidy %>% filter(variable == "Europerank") %>%
+         transmute(Country, Europerank=value) %>%
+         inner_join(plot2.tidy %>%
+                      filter(variable %in% c("Population", "Players"))),
+       aes(x=Europerank, y=value, colour=variable)) +
+  geom_line() +
+  labs(title="Population compared to the number of NBA players")
+```
+
+
 
 Spodnji zemljevid prikazuje število NBA igralcev v posamezni evropski državi
 
@@ -156,23 +177,6 @@ ggplot() + geom_polygon(data=left_join(Evropa, ujemanje, by=c("NAME"="Country"))
 
 ***
 
-# Napredna analiza podatkov
 
 
-Spodnji graf prikazuje povezavo med številom naselij in površino občine.
 
-```{r graf, echo=FALSE, fig.align='center', fig.cap='Povezava med številom naselij in površino občine'}
-#ggplot(inner_join(obcine, data.frame(obcina=names(skupine),
-#                                     skupina=factor(skupine)), by="obcina")
-#, aes(x=povrsina, y=naselja, color=skupina, size=prebivalci/1000)) + geom_point() +
-#  ggtitle("Število naselij glede na površino občine") +
-#  xlab(expression("Površina (km"^2 * ")")) + ylab("Št. naselij") +
-#  guides(color=guide_legend(title="Skupina"),
-#         size=guide_legend(title="Prebivalci (* 1000)"))
-```
-
-***
-
-```{r shiny, echo=FALSE}
-#shinyAppDir("shiny", options=list(width="100%", height=600))
-```

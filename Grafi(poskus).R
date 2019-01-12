@@ -66,14 +66,26 @@ ggplot(data=fiba.lestvica.plot, aes(x=Europerank)) +
   geom_line(aes(y=Population), colour="red") + 
   geom_point(aes(y=Players), colour="green") 
 
+# Graf kot se zagre
+
+plot2.tidy <- melt(fiba.lestvica.plot, id.vars="Country", measure.vars=colnames(fiba.lestvica.plot)[-1])
+
+ggplot(data=plot2.tidy %>% filter(variable == "Europerank") %>%
+         transmute(Country, Europerank=value) %>%
+         inner_join(plot2.tidy %>%
+                      filter(variable %in% c("Population", "Players"))),
+       aes(x=Europerank, y=value, colour=variable)) +
+  geom_line() +
+  labs(title="Population compared to the number of NBA players")
 
 
+
+
+# Plot1
 
 # Povprecni rang igralca 
 povprecni.rang <- ((540*541)/2) / 540 # Logično: 270.5
 
-# Graf, glede na povprečje
-# X os ni važna, izbriši?
 library(tidyverse)
 
 plot1 <- inner_join(zaupanje.evropejcem, ucinkovitost.evropejcev, by="Player")
@@ -92,9 +104,6 @@ ggplot(data=plot1.tidy %>% filter(variable == "Points.rank") %>%
   geom_point() +
   geom_hline(yintercept=povprecni.rang, colour="green") + 
   labs(title="Relative to the average rank")
-                                        
-
-  ggplot(data=plot1.tidy %>% filter(variable != "MinutesPlayed.rank"), aes(x= filter(plot1.tidy, variable == "Points.rank")$value))
 
 
 # Razlikovanje od povprečja pri številu igralcev na 10 mills
