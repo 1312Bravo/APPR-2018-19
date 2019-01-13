@@ -1,5 +1,8 @@
 ## Projekt pri Predmetu APPR v šolskem letu 2018/19
 
+* [![Shiny](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/1312Bravo/APPR-2018-19/master?urlpath=shiny/APPR-2018-19/projekt.Rmd) Shiny
+* [![RStudio](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/1312Bravo/APPR-2018-19/master?urlpath=rstudio) RStudio
+
 ## Naslov
 
 Primerjava igralcev v ligi NBA glede na nacionalnost
