@@ -26,7 +26,21 @@ source("lib/rstudio.r", encoding="UTF-8")
 # Izbira teme
 
 Primerjava evropejcev z igralci ostalih nacionalnosti v ligi NBA in primerjava evropejcev med sabo.
-Primerjava je narejena glede na sezono 2017/18.
+Podatke bom zbral iz sezone 17/18. Igralce bom med sabo primerjal po več kriterijih:
+
+- Delež tujcev (ne Američanov) na vseh petih pozicijah. (Ni vključeno, morda še pride)
+- Povprečje točk glede na pozicije in na splošno. 
+- Igralne minute glede na pozicije in na splošno.
+- Plača glede na pozicije in na splošno. 
+- Število metov glede na pozicije in na splošno (Zaupanje ekipe posameznemu igralcu)
+- Število evropskih igralcev tedna.
+
+Naknadno bom primerjal med sabo še posamezne Evropske države.
+Zbral bom podatke iz zgornje primerjave in vpeljal dodatne kriterije:
+
+- Delež igralcev posamezne države.
+- Delež igralcev v NBA glede na število prebivalcev posamezne države.
+- Delež igralcev posamezne države v NBA glede na ranking na lestvici FIBA.
 
 ![](slike/NBAlog.png)
 
@@ -44,7 +58,7 @@ nba.com, fiba.basketball.com, worldpopulationreview.com
 Dve tabeli sta uvoženi v obliki csv -> statistika, populacija.
 Tri tabele so uvožene v obliki HTML iz zgoraj naštetih spletnih strani -> fiba.lestvica, evropejci, place
 
-1.'statistika' -> Podatki o splosni statistiki vseh igralcev skozi celotno sezono
+1.'statistika' -> Podatki o splošni statistiki vseh igralcev skozi celotno sezono.
 
   - `Player` - spremenljivka: ime igralca [character]
   - `Pos` - spremenljivka: pozicija na kateri igralec igra: PG, SG, SF, PF, C [character],
@@ -66,11 +80,11 @@ Tri tabele so uvožene v obliki HTML iz zgoraj naštetih spletnih strani -> fiba
   - `PTS` - spremenljivka: število doseženih točk [numeric]
   
   
-2. 'place -> podatki o višini plač igralcev
+2. 'place -> podatki o višini plač igralcev.
   - `Player` - spremenljivka: ime igralca [character]
   - `Salary` - spremenljivka: višina plače na sezono [numeric]
 
-3. 'evropejci' -> podatki o evropejcih in njihovi nacionalnosti
+3. 'evropejci' -> podatki o evropejcih in njihovi nacionalnosti.
   - `Player` - spremenljivka: ime igralca [character]
   - `Country` - spremenljivka: država iz katere posamezen igralec prihaja [character]
   
@@ -92,10 +106,12 @@ Tri tabele so uvožene v obliki HTML iz zgoraj naštetih spletnih strani -> fiba
 Izvedene so nadgradnje tabel, narejene so tudi nove tabele namenjene za lažjo kasnejšo napredno analizo ter vizualizacijo. S tem namenom sem analizo naredil pred vizualizacijo.
 
 - PLACE:
+
 Tabeli 'place' je dodan stolpec z narodnostjo, vrstni red stolpec je urejen glede na padajočo vrednost plač.
 Pojavile so se težave s prepoznavanjem igralcev, ki so odpravljene ročno.
 
 - FIBA.LESTVICA
+
 Tabeli 'fiba.lestvica' je dodan stolpec s številom prebivalcev posameznih evropskih držav. 
 To je narejeno z združitvijo tabel 'fiba.lestvica' in 'populacija'.
 Pojavile so se težave s prepoznavanjem držav, ki so odpravljene ročno.
@@ -104,10 +120,12 @@ Narejeno z združitvjo tabel 'fiba.lestvica' in 'st.igralcev, ki je nastala za t
 Dodan je še stolpec s številom igralcev na 10 milijonov prebivalcev v državi, za namen napredne analize.
 
 - FIBA.LESTVICANBA
+
 Nastane nova tabela 'fiba.lestvicaNBA', ki ima enako stolpce kot tabela 'fiba.lestvica0' vendar samo z vrsticami držav, ki imajo vsaj enega igralca v NBA.
 (Morda sploh ne bom potreboval)
 
 - ZAUPANJE.EVROPEJCEM
+
 Nastane nova tabela 'statistika.zaupanja', ki vsebuje stoplce tabele statistika, ki največ povejo o zaupanje ekipe oz franšize posameznemu igralcu.
 To so: stevilo odigranih minut, stevilo tekem, stevilo metov in stevilo zacetih tekem.
 Dodata se ji tudi stolpca plače in narodnosti z združitvijo s tabelo 'place'.
@@ -117,16 +135,11 @@ V tabeli 'zaupanje.evropejcem' na koncu ostanejo samo še stolpci z imeni igralc
 število odigranih minut, število tekem, število metov in število začetih tekem.
 
 - UCINKOVITOST.EVROPEJCEV'
+
 Tabela 'ucinkovitost.evropejcev' nastane po podobnem postopku kot 'zaupanje.evropejcem'.
 V njej so stolpci z imeni igralcev, njihovo narodnostjo in rangom glede na:
 učinkovitost meta, učinkovitost pri prostih metih, točkah'x', skokih'x', podajah'x', ukradenih točkah'x', izgubljenih žogah'x'
 'x' -> glede na odigrane minute.
-
-
-
-
-
-
 
 
 
@@ -139,20 +152,23 @@ source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 ```
 
 
-Spodnji graf prikazuje razmerjem med plačo in odstotkom meta igralcev.
 
-```{r glede na povprečje, echo=FALSE, message=FALSE, fig.align='center', fig.cap='povezava med plačo in odstotkom meta igralcev, glede na povprečje'}
+
+```{r glede na povprečje, echo=FALSE, message=FALSE, fig.align='center', fig.cap='povezava med efektivnostjo meta in plačo glede na povprečje'}
 ggplot(data=plot1.tidy %>% filter(variable == "Points.rank") %>%
          transmute(Player, Points.rank=value) %>%
          inner_join(plot1.tidy %>%
                       filter(variable %in% c("EffectiveFieldGoal.rank", "Salary.rank"))),
        aes(x=Points.rank, y=value, colour=variable)) +
   geom_point() +
-  geom_hline(yintercept=povprecni.rang, colour="green") + 
-  labs(title="Relative to the average rank")
+  geom_hline(yintercept=povprecni.rang, colour="green") 
+  #+ labs(title="Relative to the average rank")
 ```
 
-Spodnji graf prikazuje povezavo številom igralcev v NBA in populacijo držav.
+
+
+
+
 
 ```{r fiba.lestvica populacija, echo=FALSE, message=FALSE, fig.align='center', fig.cap='povezava med številom igralcev in populacijo'}
 ggplot(data=plot2.tidy %>% filter(variable == "Europerank") %>%
@@ -160,19 +176,20 @@ ggplot(data=plot2.tidy %>% filter(variable == "Europerank") %>%
          inner_join(plot2.tidy %>%
                       filter(variable %in% c("Population", "Players"))),
        aes(x=Europerank, y=value, colour=variable)) +
-  geom_line() +
-  labs(title="Population compared to the number of NBA players")
+  geom_line() 
+  #+ labs(title="Population compared to the number of NBA players")
 ```
 
 
 
-Spodnji zemljevid prikazuje število NBA igralcev v posamezni evropski državi
 
-```{r zemljevid, echo=FALSE, fig.align='center', fig.cap='Zemljevid števila igralcev v posamezni državi'}
+
+
+```{r zemljevid, echo=FALSE, fig.align='center', warning=FALSE, fig.cap='Zemljevid števila igralcev v posamezni državi'}
 ggplot() + geom_polygon(data=left_join(Evropa, ujemanje, by=c("NAME"="Country")),
                         aes(x=long, y=lat, group=group, fill=Players)) +
   ggtitle("Število NBA igralcev v posamezni državi") + xlab("") + ylab("") +
-  guides(fill=guide_colorbar(title="Št. igralcev"))
+  guides(fill=guide_colorbar(title="Število igralcev"))
 ```
 
 ***

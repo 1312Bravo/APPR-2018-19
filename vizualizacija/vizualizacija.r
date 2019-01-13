@@ -56,8 +56,8 @@ ujemanje$Players[is.na(ujemanje$Players)]<- 0
 # Izrišem zemljevid Evrope, v katerem bo vsaka država pobarvana glede št. igralcev v ligi NBA
 ggplot() + geom_polygon(data=left_join(Evropa, ujemanje, by=c("NAME"="Country")),
                         aes(x=long, y=lat, group=group, fill=Players)) +
-  ggtitle("Number of NBA players per country in Europe") + xlab("") + ylab("") +
-  guides(fill=guide_colorbar(title="Number of players"))
+  ggtitle("Števila NBA igralcev v posamezni evropski državi") + xlab("") + ylab("") +
+  guides(fill=guide_colorbar(title="Število igralcev"))
 
 
 
@@ -74,7 +74,7 @@ ggplot(data=plot2.tidy %>% filter(variable == "Europerank") %>%
                       filter(variable %in% c("Population", "Players"))),
        aes(x=Europerank, y=value, colour=variable)) +
   geom_line() +
-  labs(title="Population compared to the number of NBA players")
+  labs(title="Primerjava populacije(/10 milijonov) in števila NBA igralcev")
 
 
 # Izrišem graf, ki prikazuje povezavo plačo in odstotkom meta igralcev, glede na povprečje
@@ -96,7 +96,7 @@ ggplot(data=plot1.tidy %>% filter(variable == "Points.rank") %>%
        aes(x=Points.rank, y=value, colour=variable)) +
   geom_point() +
   geom_hline(yintercept=povprecni.rang, colour="green") + 
-  labs(title="Relative to the average rank")
+  labs(title="Rank plač in odstotka meta glede na povprečje")
 
 
 
