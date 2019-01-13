@@ -154,7 +154,7 @@ source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 
 
 
-```{r glede na povprecje, echo=FALSE, message=FALSE, fig.align='center', fig.cap='povezava med efektivnostjo meta in placo glede na povprecje'}
+```{r, echo=FALSE, message=FALSE, fig.align='center', fig.cap='povezava med efektivnostjo meta in placo glede na povprecje'}
 ggplot(data=plot1.tidy %>% filter(variable == "Points.rank") %>%
          transmute(Player, Points.rank=value) %>%
          inner_join(plot1.tidy %>%
