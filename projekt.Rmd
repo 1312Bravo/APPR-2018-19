@@ -154,7 +154,7 @@ source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 
 
 
-```{r glede na povprečje, echo=FALSE, message=FALSE, fig.align='center', fig.cap='povezava med efektivnostjo meta in plačo glede na povprečje'}
+```{r glede na povprecje, echo=FALSE, message=FALSE, fig.align='center', fig.cap='povezava med efektivnostjo meta in placo glede na povprecje'}
 ggplot(data=plot1.tidy %>% filter(variable == "Points.rank") %>%
          transmute(Player, Points.rank=value) %>%
          inner_join(plot1.tidy %>%
@@ -170,7 +170,7 @@ ggplot(data=plot1.tidy %>% filter(variable == "Points.rank") %>%
 
 
 
-```{r fiba.lestvica populacija, echo=FALSE, message=FALSE, fig.align='center', fig.cap='povezava med številom igralcev in populacijo'}
+```{r fiba.lestvica populacija, echo=FALSE, message=FALSE, fig.align='center', fig.cap='povezava med stevilom igralcev in populacijo deljeno z 10 milijoni'}
 ggplot(data=plot2.tidy %>% filter(variable == "Europerank") %>%
          transmute(Country, Europerank=value) %>%
          inner_join(plot2.tidy %>%
@@ -185,7 +185,7 @@ ggplot(data=plot2.tidy %>% filter(variable == "Europerank") %>%
 
 
 
-```{r zemljevid, echo=FALSE, fig.align='center', warning=FALSE, fig.cap='Zemljevid števila igralcev v posamezni državi'}
+```{r zemljevid, echo=FALSE, fig.align='center', warning=FALSE, fig.cap='Zemljevid stevila igralcev v posamezni drzavi'}
 ggplot() + geom_polygon(data=left_join(Evropa, ujemanje, by=c("NAME"="Country")),
                         aes(x=long, y=lat, group=group, fill=Players)) +
   ggtitle("Število NBA igralcev v posamezni državi") + xlab("") + ylab("") +

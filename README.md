@@ -9,7 +9,7 @@ Primerjava igralcev v ligi NBA glede na nacionalnost
 
 ## Avtor
 
-# Urh Peček
+ Urh Peček
 
 ## Osnovna ideja
 
