@@ -142,4 +142,4 @@ ggplot(data=plot.overall.tidy %>% filter(variable == "Points.rank") %>%
        aes(x=Points.rank, y=value, colour=variable)) +
   geom_point() +
   geom_hline(yintercept=povprecni.rang, colour="green") + 
-  labs(title="Rank plač in odstotka meta glede na povprečje")
+  labs(title="Rank plač in skupni rank glede na povprečje")
