@@ -71,23 +71,24 @@ ggplot() + geom_polygon(data=left_join(Evropa, ujemanje, by=c("NAME"="Country"))
 fiba.lestvica.plot <- fiba.lestvica[,c(1,4,5,6)]
 fiba.lestvica.plot[3] <- fiba.lestvica.plot[3] / 10000000
 names(fiba.lestvica.plot)[2:4] <- c("Evropa.rank",  "Populacija", "St.Igralcev")
+fiba.lestvica.plot <- fiba.lestvica.plot %>%
+  arrange(St.Igralcev,Populacija) %>%
+  mutate(Country=factor(Country,levels=Country,ordered=T))
 plot2.tidy <- melt(fiba.lestvica.plot, id.vars="Country", measure.vars=colnames(fiba.lestvica.plot)[-1])
 
 ggplot(data=plot2.tidy %>% filter(variable == "Evropa.rank") %>%
          transmute(Country, Evropa.rank=value) %>%
          inner_join(plot2.tidy %>%
                       filter(variable %in% c("Populacija", "St.Igralcev"))),
-       aes(x=Country, y=value, colour=variable)) +
-  geom_col(position="dodge", stat = "identity") +
+       aes(x=Country, y=value, fill=variable)) +
+  geom_col(position="dodge") +
   coord_flip() + ylab("Število igralcev") + xlab("Država") +
   labs(title="Primerjava populacije(/10 milijonov) in števila NBA igralcev")
 
-# Drugačen graf
+# # Fiba lestvica: Europe rank vs players vs population per 10 mills #2
 
-ggplot(data = fiba.lestvica.plot, aes(x=Evropa.rank, y=St.Igralcev, fill=Populacija)) +
-  geom_col(position="dodge")
 
-# Ne dela mi dobro dodge :(
+
 
 
 
@@ -138,8 +139,9 @@ ggplot(data=plot.overall.tidy %>% filter(variable == "Tocke.rank") %>%
          transmute(Player, Tocke.rank=value) %>%
          inner_join(plot.overall.tidy %>%
                       filter(variable %in% c("Skupni.rank", "Placa.rank"))),
-       aes(x=Tocke.rank, y=value, colour=variable)) +
-  geom_col(position="dodge", width=2) +
-  geom_hline(yintercept=povprecni.rang, colour="green") + 
+       aes(x=Tocke.rank, y=value, fill=variable)) +
+  geom_col(position="dodge", width=5) +
+  geom_hline(yintercept=povprecni.rang, colour="green") +
+ coord_flip() + ylab("Rank") + xlab("Igralec")
   labs(title="Rank plač in skupni rank učinkovitosti glede na povprečje") 
   
