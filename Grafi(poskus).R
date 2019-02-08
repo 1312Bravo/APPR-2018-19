@@ -113,4 +113,33 @@ ggplot(data=plot1.tidy %>% filter(variable == "Points.rank") %>%
 
 
 
+# Overall ucinkovitost vs place; Graf
 
+
+ucinkovitost.overall <- statistika.ucinkovitosti
+ucinkovitost.overall$Sum.rank <- rowSums(ucinkovitost.overall[,11:18])
+ucinkovitost.overall <- ucinkovitost.overall %>%
+  arrange(Sum.rank) %>%  
+  mutate(Sum.rank = 1:nrow(.))
+
+ucinkovitost.evropejcev.overall <- filter(ucinkovitost.overall, Country %in% fiba.lestvica$Country)
+ucinkovitost.evropejcev.overall <- ucinkovitost.evropejcev.overall[,-c(3:10)]
+
+povprecni.rang <- ((540*541)/2) / 540 # Logično: 270.5
+
+library(tidyverse)
+
+plot.overall <- inner_join(zaupanje.evropejcem, ucinkovitost.evropejcev.overall, by="Player")
+plot.overall <- plot.overall[,c(1,3,11,17)]
+
+library(reshape2)
+plot.overall.tidy <- melt(plot.overall, id.vars="Player", measure.vars=colnames(plot.overall)[-1])
+
+ggplot(data=plot.overall.tidy %>% filter(variable == "Points.rank") %>%
+         transmute(Player, Points.rank=value) %>%
+         inner_join(plot.overall.tidy %>%
+                      filter(variable %in% c("Sum.rank", "Salary.rank"))),
+       aes(x=Points.rank, y=value, colour=variable)) +
+  geom_point() +
+  geom_hline(yintercept=povprecni.rang, colour="green") + 
+  labs(title="Rank plač in odstotka meta glede na povprečje")
