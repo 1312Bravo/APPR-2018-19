@@ -81,16 +81,30 @@ ggplot(data=plot2.tidy %>% filter(variable == "Evropa.rank") %>%
          inner_join(plot2.tidy %>%
                       filter(variable %in% c("Populacija", "St.Igralcev"))),
        aes(x=Country, y=value, fill=variable)) +
-  geom_col(position="dodge") +
+  geom_col(position="stack") +
   coord_flip() + ylab("Število igralcev") + xlab("Država") +
   labs(title="Primerjava populacije(/10 milijonov) in števila NBA igralcev")
 
-# # Fiba lestvica: Europe rank vs players vs population per 10 mills #2
 
 
+#  Fiba lestvica: Europe rank vs players per population (20 mills)
+fiba.lestvica.plot.population <- fiba.lestvica[,c(1,4,5,6)]
+fiba.lestvica.plot.population[3] <- fiba.lestvica.plot.population[3] / 20000000
+names(fiba.lestvica.plot.population)[2:4] <- c("Evropa.rank",  "Populacija", "St.Igralcev")
+fiba.lestvica.plot.population$St.IgralcevNa10milijonov <- fiba.lestvica.plot.population$St.Igralcev / fiba.lestvica.plot.population$Populacija
+fiba.lestvica.plot.population <- fiba.lestvica.plot.population %>%
+  arrange(St.IgralcevNa10milijonov) %>%
+  mutate(Country=factor(Country,levels=Country,ordered=T))
+plot.pop.tidy <- melt(fiba.lestvica.plot.population, id.vars="Country", measure.vars=colnames(fiba.lestvica.plot.population)[-1])
 
-
-
+ggplot(data=plot.pop.tidy %>% filter(variable == "Evropa.rank") %>%
+         transmute(Country, Evropa.rank=value) %>%
+         inner_join(plot.pop.tidy %>%
+                      filter(variable %in% c("St.IgralcevNa10milijonov"))),
+       aes(x=Country, y=value, fill=variable)) +
+  geom_col(position="stack") +
+  coord_flip() + ylab("Število igralcev") + xlab("Država") +
+  labs(title="Primerjava populacije(/10 milijonov) in števila NBA igralcev")
 
 
 
@@ -142,6 +156,6 @@ ggplot(data=plot.overall.tidy %>% filter(variable == "Tocke.rank") %>%
        aes(x=Tocke.rank, y=value, fill=variable)) +
   geom_col(position="dodge", width=5) +
   geom_hline(yintercept=povprecni.rang, colour="green") +
- coord_flip() + ylab("Rank") + xlab("Igralec")
+ coord_flip() + ylab("Rank") + xlab("Igralec") + 
   labs(title="Rank plač in skupni rank učinkovitosti glede na povprečje") 
   

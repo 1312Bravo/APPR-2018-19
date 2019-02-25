@@ -164,3 +164,18 @@ statistika.ucinkovitosti  <- statistika.ucinkovitosti %>%
 # Sedaj imam tabelo ucinkovitosti v kateri so samo evropejci in njihov ranking glede na določene meritve
 ucinkovitost.evropejcev <- filter(statistika.ucinkovitosti, Country %in% fiba.lestvica$Country)
 ucinkovitost.evropejcev <- ucinkovitost.evropejcev[,-c(3:10)]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
