@@ -166,7 +166,18 @@ ucinkovitost.evropejcev <- filter(statistika.ucinkovitosti, Country %in% fiba.le
 ucinkovitost.evropejcev <- ucinkovitost.evropejcev[,-c(3:10)]
 
 
+
+
+
 #######  NAPREDNA ANALIZA ######
+ucinkovitost.overall <- statistika.ucinkovitosti
+ucinkovitost.overall$Sum.rank <- rowSums(ucinkovitost.overall[,11:18])
+ucinkovitost.overall <- ucinkovitost.overall %>%
+  arrange(Sum.rank) %>%  
+  mutate(Sum.rank = 1:nrow(.))
+
+ucinkovitost.evropejcev.overall <- filter(ucinkovitost.overall, Country %in% fiba.lestvica$Country)
+ucinkovitost.evropejcev.overall <- ucinkovitost.evropejcev.overall[,-c(3:10)]
 
 # Povezava med placo in ucinkovitostjo Overall rank
 ucinkovitostvsplaca <- inner_join(zaupanje.evropejcem, ucinkovitost.evropejcev.overall, by="Player")

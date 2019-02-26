@@ -140,14 +140,20 @@ ggplot(data=tockevsplaca, aes(x=Tocke, y=Placa)) +
 ```
 
 
+
+
+
 Vidimo, da glede na točke najbolših 5 igralcev nima previsoke plače, ravno nasprotno,
 dosegajo večje število točk kot bi jih morali po evropskih standardih, da bi upraviči svojo plačo.
 Najbolje plačani igralec je Stephen Curry, ki dosega 0.8253 točke na minuto, drugi je Lebron James, ki dosega 0.7439 točke na minuto, kar je veliko več kot bi morala po evropskih standardih. Tretji je Paul Millsap s 0.4856 točkami na minuto kar pa je posledica tipa igralca, najverjetneje pa je pri njem plača res nekoliko prevelika glede na učinek.
 
 
+
+
+
 Za konec pa si oglejmo še obnašanje več spremenljivk glede na plačo.
 
-```{r zemljevid, echo=FALSE, fig.align='center', warning=FALSE, fig.cap=''}
+```{r, echo=FALSE, fig.align='center', warning=FALSE, message=FALSE, fig.cap=''}
 ggplot() + geom_smooth(data=metvsplaca.rank, aes(x=EffectiveFieldGoal.rank, y=Salary.rank, col="Met"), se=FALSE, size=2) +
   geom_smooth(data=tockevsplaca.rank, aes(x=Points.rank, y=Salary.rank, col="Tocke"), se=FALSE, size=2) + 
   geom_smooth(data=podajevsplaca.rank, aes(x=Assists.rank, y=Salary.rank, col="Podaje"), se=FALSE, size=2) + 
