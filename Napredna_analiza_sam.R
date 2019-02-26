@@ -1,6 +1,6 @@
 #######  NAPREDNA ANALIZA ######
 
-# Povezava med placo in ucinkovitostjo Overall
+# Povezava med placo in ucinkovitostjo Overall rank
 ucinkovitostvsplaca <- inner_join(zaupanje.evropejcem, ucinkovitost.evropejcev.overall, by="Player")
 ucinkovitostvsplaca <- ucinkovitostvsplaca[, c(1,3,17)]
 
@@ -46,15 +46,66 @@ ggplot(data=tockevsplaca, aes(x=Tocke, y=Placa)) + geom_point() + geom_smooth(me
 StephCurry <- data.frame(Placa=place[1:5,3])
 predict(fittocke, StephCurry)
 evropski.standard <- StephCurry %>% mutate(Tocke=predict(fittocke, .))
+
+######################################################################################## 
+
 # Izris Predikcije
 ggplot(data=tockevsplaca, aes(x=Tocke, y=Placa)) + 
-  geom_point() + 
+  geom_point(shape=1) + 
   geom_smooth(method=lm) + 
-  geom_point(data=evropski.standard, aes(x=Tocke, y=Placa), color='red', size=2) + 
-  ggtitle("Evropejci vs top 5(Američani)") + 
+  geom_vline(data=evropski.standard, aes(xintercept=Tocke, y=Placa), color='red', size=1) + 
+  geom_point(data=evropski.standard, aes(x=Tocke, y=Placa), color='purple', size=2) + 
+  ggtitle("Evropejci vs top 5 (Američani)") + 
   theme_bw()
 
+##############################################################################################
 
-#Kako gre top 5 v realnosti s točkami
+# Povezava med plačo in učinkovitostjo meta (ranking)
 
-                                               
+metvsplaca.rank <- inner_join(zaupanje.evropejcem, ucinkovitost.evropejcev.overall, by="Player")
+metvsplaca.rank <- metvsplaca.rank[, c(1,3,9)]
+
+#Izračun modela
+fitmet.rank <- lm(EffectiveFieldGoal.rank ~ Salary.rank, data=metvsplaca.rank)
+#Izris modela
+ggplot(data=metvsplaca.rank, aes(x=EffectiveFieldGoal.rank, y=Salary.rank)) + geom_point(col="blue") + geom_smooth(method=lm, col="red")
+
+
+# Povezava med plačo in učinkovitostjo meta
+metvsplaca <- statistika.ucinkovitosti[, c(1,2,3)]
+# Vzamem samo evropejce
+metvsplaca <- filter(metvsplaca, Country %in% fiba.lestvica$Country)
+# V tabelo dodam plače
+metvsplaca <- inner_join(metvsplaca, place, by="Player")
+metvsplaca <- metvsplaca[,c(-2,-4)]
+names(metvsplaca) <- c("Player", "Met", "Placa")
+#Izračun modela
+fitmet <- lm(Met ~ Placa, data=metvsplaca)
+ggplot(data=metvsplaca, aes(x=Met, y=Placa)) + geom_point() + geom_smooth(method=lm)
+
+
+# Povezava med plačo in podajami rank
+podajevsplaca.rank <- inner_join(zaupanje.evropejcem, ucinkovitost.evropejcev.overall, by="Player")
+podajevsplaca.rank <- podajevsplaca.rank[, c(1,3,13)]
+
+# Povezava med plačo in skoki rank
+skokivsplaca.rank <- inner_join(zaupanje.evropejcem, ucinkovitost.evropejcev.overall, by="Player")
+skokivsplaca.rank <- skokivsplaca.rank[, c(1,3,12)]
+
+# Povezava med igralnim časom in plačo rank
+minutevsplaca.rank <- inner_join(zaupanje.evropejcem, ucinkovitost.evropejcev.overall, by="Player")
+minutevsplaca.rank <- minutevsplaca.rank[, c(1,3,6)]
+
+##############################################################################################
+
+# Kako se več spremenljivk obnaša glede na plačo rank
+ggplot() + geom_smooth(data=metvsplaca.rank, aes(x=EffectiveFieldGoal.rank, y=Salary.rank, col="Met"), se=FALSE) +
+  geom_smooth(data=tockevsplaca.rank, aes(x=Points.rank, y=Salary.rank, col="Tocke"), se=FALSE) + 
+  geom_smooth(data=podajevsplaca.rank, aes(x=Assists.rank, y=Salary.rank, col="Podaje"), se=FALSE) + 
+  geom_smooth(data=skokivsplaca.rank, aes(x=Rebounds.rank, y=Salary.rank, col="Skoki"), se=FALSE) +
+  geom_smooth(data=minutevsplaca.rank, aes(x=MinutesPlayed.rank, y=Salary.rank, col="Odigrane minute"), se=FALSE) +
+  geom_smooth(data=ucinkovitostvsplaca, aes(x=Sum.rank, y=Salary.rank, col="Overall"), se=FALSE, size=3) +
+  ylab("Plača") + xlab("Rank") + 
+  labs(title="Obnašanje več spremenljivk glede na plačo, ranking") 
+
+########################################################################################################              

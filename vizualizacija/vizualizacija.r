@@ -53,16 +53,18 @@ st.igralcev.eu[4,1] <- "Czechia"
 ujemanje <- left_join(drzave, st.igralcev.eu, by="Country")
 ujemanje$Players[is.na(ujemanje$Players)]<- 0
 
+###############################################################################################
+
 # Izrišem zemljevid Evrope, v katerem bo vsaka država pobarvana glede št. igralcev v ligi NBA
 ggplot() + geom_polygon(data=left_join(Evropa, ujemanje, by=c("NAME"="Country")),
                         aes(x=long, y=lat, group=group, fill=Players)) +
   ggtitle("Števila NBA igralcev v posamezni evropski državi") + xlab("") + ylab("") +
   guides(fill=guide_colorbar(title="Število igralcev")) + 
-  geom_point(aes(x=2, y=46)) + geom_text(aes(x=2, y=46), label = "Fra - 10") +
-  geom_point(aes(x=2, y=46)) + geom_text(aes(x=14.4, y=46), label = "Slo- 1") +
+  geom_point(aes(x=2, y=46)) + geom_text(aes(x=2, y=46), label = "Fra-10") +
+  geom_point(aes(x=2, y=46)) + geom_text(aes(x=14.4, y=46), label = "Slo-1") +
   scale_fill_gradient2(low = "#008000", mid = "yellow", high = "red", midpoint = 4.5) 
   
-  
+##################################################################################################  
 
 
 
@@ -81,7 +83,7 @@ ggplot(data=plot2.tidy %>% filter(variable == "Evropa.rank") %>%
          inner_join(plot2.tidy %>%
                       filter(variable %in% c("Populacija", "St.Igralcev"))),
        aes(x=Country, y=value, fill=variable)) +
-  geom_col(position="stack") +
+  geom_col(position="dodge") +
   coord_flip() + ylab("Število igralcev") + xlab("Država") +
   labs(title="Primerjava populacije(/10 milijonov) in števila NBA igralcev")
 
@@ -97,6 +99,8 @@ fiba.lestvica.plot.population <- fiba.lestvica.plot.population %>%
   mutate(Country=factor(Country,levels=Country,ordered=T))
 plot.pop.tidy <- melt(fiba.lestvica.plot.population, id.vars="Country", measure.vars=colnames(fiba.lestvica.plot.population)[-1])
 
+####################################################################################################
+
 ggplot(data=plot.pop.tidy %>% filter(variable == "Evropa.rank") %>%
          transmute(Country, Evropa.rank=value) %>%
          inner_join(plot.pop.tidy %>%
@@ -106,7 +110,17 @@ ggplot(data=plot.pop.tidy %>% filter(variable == "Evropa.rank") %>%
   coord_flip() + ylab("Število igralcev") + xlab("Država") +
   labs(title="Primerjava populacije(/10 milijonov) in števila NBA igralcev")
 
+##############################################################################################3
 
+# Zemljevid igralcev glede na populacijo
+
+ggplot() + geom_polygon(data=left_join(Evropa, fiba.lestvica.plot.population[,c(1,5)], by=c("NAME"="Country")),
+                        aes(x=long, y=lat, group=group, fill=St.IgralcevNa10milijonov)) +
+  ggtitle("Števila NBA igralcev v posamezni evropski državi na 10 milijonov prebivalcev") + xlab("") + ylab("") +
+  guides(fill=guide_colorbar(title="Število igralcev")) +
+  scale_fill_manual(values=0)
+  
+  
 
 # Izrišem graf, ki prikazuje povezavo plačo in odstotkom meta igralcev, glede na povprečje
 
@@ -122,8 +136,8 @@ ggplot(data=plot1.tidy %>% filter(variable == "Tocke.rank") %>%
          transmute(Player, Tocke.rank=value) %>%
          inner_join(plot1.tidy %>%
                       filter(variable %in% c("UcinkovitostMeta.rank", "Placa.rank"))),
-       aes(x=Tocke.rank, y=value, colour=variable)) +
-  geom_point() +
+       aes(x=Tocke.rank, y=value, fill=variable)) +
+  geom_col(position="dodge", width=3) +
   geom_hline(yintercept=povprecni.rang, colour="green") + 
   labs(title="Rank plač in odstotka meta glede na povprečje")
 
@@ -158,4 +172,9 @@ ggplot(data=plot.overall.tidy %>% filter(variable == "Tocke.rank") %>%
   geom_hline(yintercept=povprecni.rang, colour="green") +
  coord_flip() + ylab("Rank") + xlab("Igralec") + 
   labs(title="Rank plač in skupni rank učinkovitosti glede na povprečje") 
+
+
+
+
+
   
