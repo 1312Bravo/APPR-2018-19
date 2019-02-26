@@ -56,7 +56,7 @@ ujemanje$Players[is.na(ujemanje$Players)]<- 0
 ###############################################################################################
 
 # Izrišem zemljevid Evrope, v katerem bo vsaka država pobarvana glede št. igralcev v ligi NBA
-ggplot() + geom_polygon(data=left_join(Evropa, ujemanje, by=c("NAME"="Country")),
+ggplot() + geom_polygon(data=left_join(Evropa, ujemanje %>% filter(Players > 0), by=c("NAME"="Country")),
                         aes(x=long, y=lat, group=group, fill=Players)) +
   ggtitle("Števila NBA igralcev v posamezni evropski državi") + xlab("") + ylab("") +
   guides(fill=guide_colorbar(title="Število igralcev")) + 
@@ -89,9 +89,9 @@ ggplot(data=plot2.tidy %>% filter(variable == "Evropa.rank") %>%
 
 
 
-#  Fiba lestvica: Europe rank vs players per population (20 mills)
+#  Fiba lestvica: Europe rank vs players per population (10 mills)
 fiba.lestvica.plot.population <- fiba.lestvica[,c(1,4,5,6)]
-fiba.lestvica.plot.population[3] <- fiba.lestvica.plot.population[3] / 20000000
+fiba.lestvica.plot.population[3] <- fiba.lestvica.plot.population[3] / 10000000
 names(fiba.lestvica.plot.population)[2:4] <- c("Evropa.rank",  "Populacija", "St.Igralcev")
 fiba.lestvica.plot.population$St.IgralcevNa10milijonov <- fiba.lestvica.plot.population$St.Igralcev / fiba.lestvica.plot.population$Populacija
 fiba.lestvica.plot.population <- fiba.lestvica.plot.population %>%
@@ -100,6 +100,7 @@ fiba.lestvica.plot.population <- fiba.lestvica.plot.population %>%
 plot.pop.tidy <- melt(fiba.lestvica.plot.population, id.vars="Country", measure.vars=colnames(fiba.lestvica.plot.population)[-1])
 
 ####################################################################################################
+# Nisem vključil
 
 ggplot(data=plot.pop.tidy %>% filter(variable == "Evropa.rank") %>%
          transmute(Country, Evropa.rank=value) %>%
@@ -110,17 +111,17 @@ ggplot(data=plot.pop.tidy %>% filter(variable == "Evropa.rank") %>%
   coord_flip() + ylab("Število igralcev") + xlab("Država") +
   labs(title="Primerjava populacije(/10 milijonov) in števila NBA igralcev")
 
-##############################################################################################3
+##############################################################################################
 
 # Zemljevid igralcev glede na populacijo
 
-ggplot() + geom_polygon(data=left_join(Evropa, fiba.lestvica.plot.population[,c(1,5)], by=c("NAME"="Country")),
+ggplot() + geom_polygon(data=left_join(Evropa, fiba.lestvica.plot.population[,c(1,5)] %>% filter(St.IgralcevNa10milijonov > 0) , by=c("NAME"="Country")),
                         aes(x=long, y=lat, group=group, fill=St.IgralcevNa10milijonov)) +
   ggtitle("Števila NBA igralcev v posamezni evropski državi na 10 milijonov prebivalcev") + xlab("") + ylab("") +
   guides(fill=guide_colorbar(title="Število igralcev")) +
-  scale_fill_manual(values=0)
+  scale_fill_gradient2(low = "black", high = "yellow", mid = "red", midpoint = 15)
   
-  
+####################################################################################################  
 
 # Izrišem graf, ki prikazuje povezavo plačo in odstotkom meta igralcev, glede na povprečje
 

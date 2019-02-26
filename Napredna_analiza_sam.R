@@ -56,6 +56,7 @@ ggplot(data=tockevsplaca, aes(x=Tocke, y=Placa)) +
   geom_vline(data=evropski.standard, aes(xintercept=Tocke, y=Placa), color='red', size=1) + 
   geom_point(data=evropski.standard, aes(x=Tocke, y=Placa), color='purple', size=2) + 
   ggtitle("Evropejci vs top 5 (Američani)") + 
+  ylab("Plača") + xlab("Točke") +
   theme_bw()
 
 ##############################################################################################
@@ -99,13 +100,29 @@ minutevsplaca.rank <- minutevsplaca.rank[, c(1,3,6)]
 ##############################################################################################
 
 # Kako se več spremenljivk obnaša glede na plačo rank
-ggplot() + geom_smooth(data=metvsplaca.rank, aes(x=EffectiveFieldGoal.rank, y=Salary.rank, col="Met"), se=FALSE) +
-  geom_smooth(data=tockevsplaca.rank, aes(x=Points.rank, y=Salary.rank, col="Tocke"), se=FALSE) + 
-  geom_smooth(data=podajevsplaca.rank, aes(x=Assists.rank, y=Salary.rank, col="Podaje"), se=FALSE) + 
-  geom_smooth(data=skokivsplaca.rank, aes(x=Rebounds.rank, y=Salary.rank, col="Skoki"), se=FALSE) +
-  geom_smooth(data=minutevsplaca.rank, aes(x=MinutesPlayed.rank, y=Salary.rank, col="Odigrane minute"), se=FALSE) +
-  geom_smooth(data=ucinkovitostvsplaca, aes(x=Sum.rank, y=Salary.rank, col="Overall"), se=FALSE, size=3) +
+ggplot() + geom_smooth(data=metvsplaca.rank, aes(x=EffectiveFieldGoal.rank, y=Salary.rank, col="Met"), se=FALSE, size=2) +
+  geom_smooth(data=tockevsplaca.rank, aes(x=Points.rank, y=Salary.rank, col="Tocke"), se=FALSE, size=2) + 
+  geom_smooth(data=podajevsplaca.rank, aes(x=Assists.rank, y=Salary.rank, col="Podaje"), se=FALSE, size=2) + 
+  geom_smooth(data=skokivsplaca.rank, aes(x=Rebounds.rank, y=Salary.rank, col="Skoki"), se=FALSE, size=2) +
+  geom_smooth(data=minutevsplaca.rank, aes(x=MinutesPlayed.rank, y=Salary.rank, col="Odigrane minute"), se=FALSE, size=2) +
+  geom_smooth(data=ucinkovitostvsplaca, aes(x=Sum.rank, y=Salary.rank, col="Overall"), se=FALSE, size=4) +
   ylab("Plača") + xlab("Rank") + 
-  labs(title="Obnašanje več spremenljivk glede na plačo, ranking") 
+  labs(title="Obnašanje več spremenljivk glede na plačo, ranking") +
+  theme_bw()
 
-########################################################################################################              
+########################################################################################################  
+
+# Razvrščanje
+
+
+evropejci.razvrscanje <-  inner_join(zaupanje.evropejcem, ucinkovitost.evropejcev.overall, by="Player") %>% 
+  select(1, 6, 7, 11, 16, 9) 
+
+
+
+
+
+
+
+
+

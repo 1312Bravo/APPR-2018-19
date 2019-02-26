@@ -25,22 +25,9 @@ source("lib/rstudio.r", encoding="UTF-8")
 
 # Izbira teme
 
-Primerjava evropejcev z igralci ostalih nacionalnosti v ligi NBA in primerjava evropejcev med sabo.
-Podatke bom zbral iz sezone 17/18. Igralce bom med sabo primerjal po več kriterijih:
-
-- Delež tujcev (ne Američanov) na vseh petih pozicijah. (Ni vključeno, morda še pride)
-- Povprečje točk glede na pozicije in na splošno. 
-- Igralne minute glede na pozicije in na splošno.
-- Plača glede na pozicije in na splošno. 
-- Število metov glede na pozicije in na splošno (Zaupanje ekipe posameznemu igralcu)
-- Število evropskih igralcev tedna.
-
-Naknadno bom primerjal med sabo še posamezne Evropske države.
-Zbral bom podatke iz zgornje primerjave in vpeljal dodatne kriterije:
-
-- Delež igralcev posamezne države.
-- Delež igralcev v NBA glede na število prebivalcev posamezne države.
-- Delež igralcev posamezne države v NBA glede na ranking na lestvici FIBA.
+Naredil sem raziskavo evropejcev v ameriški košarkarski ligi NBA.
+Raziskoval sem vpliv plače na učinkovitost, ter favoriziranje domačih igralcev s strani američanov.
+Med sabo sem primerjal tudi evropske države.
 
 ![](slike/NBAlog.png)
 
@@ -101,49 +88,7 @@ Tri tabele so uvožene v obliki HTML iz zgoraj naštetih spletnih strani -> fiba
 
 ***
 
-# Analiza podatkov
-
-Izvedene so nadgradnje tabel, narejene so tudi nove tabele namenjene za lažjo kasnejšo napredno analizo ter vizualizacijo. S tem namenom sem analizo naredil pred vizualizacijo.
-
-- PLACE:
-
-Tabeli 'place' je dodan stolpec z narodnostjo, vrstni red stolpec je urejen glede na padajočo vrednost plač.
-Pojavile so se težave s prepoznavanjem igralcev, ki so odpravljene ročno.
-
-- FIBA.LESTVICA
-
-Tabeli 'fiba.lestvica' je dodan stolpec s številom prebivalcev posameznih evropskih držav. 
-To je narejeno z združitvijo tabel 'fiba.lestvica' in 'populacija'.
-Pojavile so se težave s prepoznavanjem držav, ki so odpravljene ročno.
-Kasneje je tabeli dodan tudi stolpec števila igralcev posamezne države.
-Narejeno z združitvjo tabel 'fiba.lestvica' in 'st.igralcev, ki je nastala za ta namen.
-Dodan je še stolpec s številom igralcev na 10 milijonov prebivalcev v državi, za namen napredne analize.
-
-- FIBA.LESTVICANBA
-
-Nastane nova tabela 'fiba.lestvicaNBA', ki ima enako stolpce kot tabela 'fiba.lestvica0' vendar samo z vrsticami držav, ki imajo vsaj enega igralca v NBA.
-(Morda sploh ne bom potreboval)
-
-- ZAUPANJE.EVROPEJCEM
-
-Nastane nova tabela 'statistika.zaupanja', ki vsebuje stoplce tabele statistika, ki največ povejo o zaupanje ekipe oz franšize posameznemu igralcu.
-To so: stevilo odigranih minut, stevilo tekem, stevilo metov in stevilo zacetih tekem.
-Dodata se ji tudi stolpca plače in narodnosti z združitvijo s tabelo 'place'.
-V to tabelo so dodani tudi stolpci z rankom igralcev glede na posamezne meritve.
-Na koncu tabelo 'statistika.zaupanja' filtrirano, tako da so v njej samo še evropejci shranim v tabelo 'zaupanje.evropejcem'.
-V tabeli 'zaupanje.evropejcem' na koncu ostanejo samo še stolpci z imeni igralcev, njihovo narodnostjo in rangom glede na:
-število odigranih minut, število tekem, število metov in število začetih tekem.
-
-- UCINKOVITOST.EVROPEJCEV'
-
-Tabela 'ucinkovitost.evropejcev' nastane po podobnem postopku kot 'zaupanje.evropejcem'.
-V njej so stolpci z imeni igralcev, njihovo narodnostjo in rangom glede na:
-učinkovitost meta, učinkovitost pri prostih metih, točkah'x', skokih'x', podajah'x', ukradenih točkah'x', izgubljenih žogah'x'
-'x' -> glede na odigrane minute.
-
-
-
-# Vizualizacija podatkov
+# Analiza in vizualizacija podatkov
 
 
 ```{r vizualizacija, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
@@ -152,47 +97,76 @@ source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 ```
 
 
+Za začetek si poglejmo koliko NBA igralcev premore vsaka evropska država.
+Če v državi ni nobenega, ki igra v ligi NBA je pobarvana s sivo barvo.
+Vidimo da prevladuje Francija z desetimi, sledijo Španija s sedmimi ter Srbija in Nemčija s petimi.
+Slovenija je imela v sezoni 2017/18 le enega, to je bil Goran Dragič.
 
 
-```{r, echo=FALSE, message=FALSE, fig.align='center', fig.cap='povezava med efektivnostjo meta in placo glede na povprecje'}
-ggplot(data=plot1.tidy %>% filter(variable == "Points.rank") %>%
-         transmute(Player, Points.rank=value) %>%
-         inner_join(plot1.tidy %>%
-                      filter(variable %in% c("EffectiveFieldGoal.rank", "Salary.rank"))),
-       aes(x=Points.rank, y=value, colour=variable)) +
-  geom_point() +
-  geom_hline(yintercept=povprecni.rang, colour="green") 
-  #+ labs(title="Relative to the average rank")
-```
-
-
-
-
-
-
-```{r, echo=FALSE, message=FALSE, fig.align='center', fig.cap='povezava med stevilom igralcev in populacijo deljeno z 10 milijoni'}
-ggplot(data=plot2.tidy %>% filter(variable == "Europerank") %>%
-         transmute(Country, Europerank=value) %>%
-         inner_join(plot2.tidy %>%
-                      filter(variable %in% c("Population", "Players"))),
-       aes(x=Europerank, y=value, colour=variable)) +
-  geom_line() 
-  #+ labs(title="Population compared to the number of NBA players")
-```
-
-
-
-
-
-
-```{r zemljevid, echo=FALSE, fig.align='center', warning=FALSE, fig.cap='Zemljevid stevila igralcev v posamezni drzavi'}
-ggplot() + geom_polygon(data=left_join(Evropa, ujemanje, by=c("NAME"="Country")),
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.cap=''}
+ggplot() + geom_polygon(data=left_join(Evropa, ujemanje %>% filter(Players > 0), by=c("NAME"="Country")),
                         aes(x=long, y=lat, group=group, fill=Players)) +
-  ggtitle("Število NBA igralcev v posamezni državi") + xlab("") + ylab("") +
-  guides(fill=guide_colorbar(title="Število igralcev"))
+  ggtitle("Števila NBA igralcev v posamezni evropski državi") + xlab("") + ylab("") +
+  guides(fill=guide_colorbar(title="Število igralcev")) + 
+  geom_point(aes(x=2, y=46)) + geom_text(aes(x=2, y=46), label = "Fra-10") +
+  geom_point(aes(x=2, y=46)) + geom_text(aes(x=14.4, y=46), label = "Slo-1") +
+  scale_fill_gradient2(low = "#008000", mid = "yellow", high = "red", midpoint = 4.5)
 ```
+
+
+Če pogledamo z drugega zornega kota, vidimo, da je največji odstotek prebivalstva v ligi NBA v Črni Gori ki ima samo 600 tisoč prebivalcev in 2 NBA igralca, sledi ji Hrvaška s 4 milijoni in 5 igralci, na tretjem in četrtem mestu sta Litva in Latvija, nato pa sledijo Bosna, Srbija in Slovenija. 
+Torej so Balkanske države močno košarkaške, česar pa ne bi pričakovali za Baltske države.
+
+
+```{r, echo=FALSE, message=FALSE, fig.align='center', warning=FALSE, fig.cap=''}
+ggplot() + geom_polygon(data=left_join(Evropa, fiba.lestvica.plot.population[,c(1,5)] %>% filter(St.IgralcevNa10milijonov > 0) , by=c("NAME"="Country")),
+                        aes(x=long, y=lat, group=group, fill=St.IgralcevNa10milijonov)) +
+  ggtitle("Zemljevid števila NBA igralcev v posamezni evropski državi na 20 milijonov prebivalcev") + xlab("") + ylab("") +
+  guides(fill=guide_colorbar(title="Število igralcev")) +
+  scale_fill_gradient2(low = "black", high = "yellow", mid = "red", midpoint = 30)
+```
+
+
+
+```{r zemljevid, echo=FALSE, fig.align='center', warning=FALSE, fig.cap='Graf prikazuje povezavo med plačo in številom točk na minuto, ki jih dosegajo igralci. Dodanih je tudi 5 najbolje plačanih NBA igralcev, ki so vsi američani, ter koliko točk na minuto bi morali dosegati glede na evropske standarde.'}
+ggplot(data=tockevsplaca, aes(x=Tocke, y=Placa)) + 
+  geom_point(shape=1) + 
+  geom_smooth(method=lm) + 
+  geom_vline(data=evropski.standard, aes(xintercept=Tocke, y=Placa), color='red', size=1) + 
+  geom_point(data=evropski.standard, aes(x=Tocke, y=Placa), color='purple', size=2) + 
+  ggtitle("Povezava med plačo in točkami") + 
+  ylab("Plača") + xlab("Točke") +
+  theme_bw()
+```
+
+
+Vidimo, da glede na točke najbolših 5 igralcev nima previsoke plače, ravno nasprotno,
+dosegajo večje število točk kot bi jih morali po evropskih standardih, da bi upraviči svojo plačo.
+Najbolje plačani igralec je Stephen Curry, ki dosega 0.8253 točke na minuto, drugi je Lebron James, ki dosega 0.7439 točke na minuto, kar je veliko več kot bi morala po evropskih standardih. Tretji je Paul Millsap s 0.4856 točkami na minuto kar pa je posledica tipa igralca, najverjetneje pa je pri njem plača res nekoliko prevelika glede na učinek.
+
+
+Za konec pa si oglejmo še obnašanje več spremenljivk glede na plačo.
+
+```{r zemljevid, echo=FALSE, fig.align='center', warning=FALSE, fig.cap=''}
+ggplot() + geom_smooth(data=metvsplaca.rank, aes(x=EffectiveFieldGoal.rank, y=Salary.rank, col="Met"), se=FALSE, size=2) +
+  geom_smooth(data=tockevsplaca.rank, aes(x=Points.rank, y=Salary.rank, col="Tocke"), se=FALSE, size=2) + 
+  geom_smooth(data=podajevsplaca.rank, aes(x=Assists.rank, y=Salary.rank, col="Podaje"), se=FALSE, size=2) + 
+  geom_smooth(data=skokivsplaca.rank, aes(x=Rebounds.rank, y=Salary.rank, col="Skoki"), se=FALSE, size=2) +
+  geom_smooth(data=minutevsplaca.rank, aes(x=MinutesPlayed.rank, y=Salary.rank, col="Odigrane minute"), se=FALSE, size=2) +
+  geom_smooth(data=ucinkovitostvsplaca, aes(x=Sum.rank, y=Salary.rank, col="Overall"), se=FALSE, size=4) +
+  ylab("Plača") + xlab("Rank") + 
+  labs(title="Obnašanje več spremenljivk glede na plačo, upoštevamo ranking ranking") +
+  theme_bw()
+```
+
 
 ***
+
+# Zaključek
+
+Iz dane analize vidimo, da so najbolj košarkarske države tiste z Balkana, ter tudi države na severu niso tako anti košarkaške kot bi se nam lahko zdelo.
+Potegnemo lahko tudi, da če pogledamo samo evropejce, je majhna korelacije med plačo in učinkovitostjo, vendar ne zelo velika.
+Evropejci pa tudi niso tako podcenjeni s strani američanov kot si velikokrat predstavljamo, ampak so obravnavani dostojno.
 
 
 
