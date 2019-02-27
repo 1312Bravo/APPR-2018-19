@@ -119,7 +119,7 @@ ggplot() + geom_polygon(data=left_join(Evropa, fiba.lestvica.plot.population[,c(
                         aes(x=long, y=lat, group=group, fill=St.IgralcevNa10milijonov)) +
   ggtitle("Števila NBA igralcev v posamezni evropski državi na 10 milijonov prebivalcev") + xlab("") + ylab("") +
   guides(fill=guide_colorbar(title="Število igralcev")) +
-  scale_fill_gradient2(low = "black", high = "yellow", mid = "red", midpoint = 15)
+  scale_fill_gradient2(low = "#008000", mid = "yellow", high = "red", midpoint = 15)
   
 ####################################################################################################  
 

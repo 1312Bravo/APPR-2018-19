@@ -226,6 +226,11 @@ StephCurry <- data.frame(Placa=place[1:5,3])
 predict(fittocke, StephCurry)
 evropski.standard <- StephCurry %>% mutate(Tocke=predict(fittocke, .))
 
+#Koliko točk v resnici dosega 5 najbolje plačanih
+top5place <- place %>% select(1,3) %>% top_n(5) 
+top5tocke <- inner_join(top5place, statistika.ucinkovitosti, by = "Player") %>% 
+  select(1,2,6)
+  
 ######################################################################################## 
 
 # Izris Predikcije
@@ -236,7 +241,9 @@ ggplot(data=tockevsplaca, aes(x=Tocke, y=Placa)) +
   geom_point(data=evropski.standard, aes(x=Tocke, y=Placa), color='purple', size=2) + 
   ggtitle("Evropejci vs top 5 (Američani)") + 
   ylab("Plača") + xlab("Točke") +
-  theme_bw()
+  theme_bw() + 
+  geom_vline(data=top5tocke, aes(xintercept=PTS, y=Salary), color='green', size=1) + 
+  geom_point(data=top5tocke, aes(x=PTS, y=Salary), color='brown', size=2) 
 
 ##############################################################################################
 
@@ -287,7 +294,8 @@ ggplot() + geom_smooth(data=metvsplaca.rank, aes(x=EffectiveFieldGoal.rank, y=Sa
   geom_smooth(data=ucinkovitostvsplaca, aes(x=Sum.rank, y=Salary.rank, col="Overall"), se=FALSE, size=4) +
   ylab("Plača") + xlab("Rank") + 
   labs(title="Obnašanje več spremenljivk glede na plačo, ranking") +
-  theme_bw()
+  theme_bw() +
+  theme(legend.position = c(0.1, 0.75), legend.text=element_text(size=20), legend.title = element_blank())
 
 ########################################################################################################  
 
