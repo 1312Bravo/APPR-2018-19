@@ -131,14 +131,17 @@ ggplot() + geom_polygon(data=left_join(Evropa, fiba.lestvica.plot.population[,c(
 Graf prikazuje povezavo med plačo in številom točk na minuto, ki jih dosegajo igralci. Dodanih je tudi 5 najbolje plačanih NBA igralcev, ki so vsi američani, ter koliko točk na minuto bi morali dosegati glede na evropske standarde.
 
 ```{r zemljevid, echo=FALSE, fig.align='center', warning=FALSE, fig.cap=''}
-ggplot(data=tockevsplaca, aes(x=Tocke, y=Placa)) + 
+ggplot(data=tockevsplaca %>% mutate(Placa = Placa / 1e+06), aes(x=Tocke, y=Placa)) + 
   geom_point(shape=1) + 
-  geom_smooth(method=lm) + 
-  geom_vline(data=top5zdruzena, aes(xintercept=Tocke, y=Placa, colour=tip), size=1) + 
-  geom_point(data=top5zdruzena, aes(x=Tocke, fill=tip), shape=21, size=2, show_guide=FALSE) + 
+  geom_smooth(method=lm)  + 
+  geom_vline(data=top5zdruzena, aes(xintercept=Tocke, y=Placa,colour=tip), size=1) + 
+  geom_point(data=top5zdruzena, aes(x=Tocke, fill=tip), shape=21, size=2) + 
   ggtitle("Evropejci vs top 5 (Američani)") + 
-  ylab("Plača  (v milijonih)") + xlab("Točke") +
-  scale_colour_manual(name = "Pričakovane Točke", values=c("Evropski_standard"="red","Ameriški_standard"="green")) +
+  ylab("Plača (v milijonih)") + xlab("Točke") +
+  scale_colour_manual(name = 'Število pričakovanih točk na minuto', 
+                      values =c('Evropski_standard'='red','Ameriški_standard'='green'))+
+  scale_fill_manual(name = 'Izpustim', 
+                    values =c('Evropski_standard'='brown','Ameriški_standard'='brown'), guide=FALSE)+
   theme_bw()
 
 ```
@@ -152,7 +155,7 @@ Vidimo torej, da če pogledamo pet najbolje plačanih igralcev, plača ni previs
 
 
 
-Za konec pa si oglejmo še obnašanje več spremenljivk glede na plačo.
+Za konec pa si oglejmo še obnašanje več spremenljivk glede na plačo, s strani evropejcev.
 
 ```{r, echo=FALSE, fig.align='center', warning=FALSE, message=FALSE, fig.cap=''}
 ggplot() + geom_smooth(data=metvsplaca.rank, aes(x=EffectiveFieldGoal.rank, y=Salary.rank, col="Met"), se=FALSE, size=2) +
