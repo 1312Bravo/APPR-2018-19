@@ -215,6 +215,7 @@ tockevsplaca <- filter(tockevsplaca, Country %in% fiba.lestvica$Country)
 tockevsplaca <- inner_join(tockevsplaca, place, by="Player")
 tockevsplaca <- tockevsplaca[,c(-2,-4)]
 names(tockevsplaca) <- c("Player", "Tocke", "Placa")
+tockevsplaca <- tockevsplaca %>% mutate(Placa = Placa/1e+06)
 #Izračun modela
 fittocke <- lm(Tocke ~ Placa, data=tockevsplaca)
 ggplot(data=tockevsplaca, aes(x=Tocke, y=Placa)) + geom_point() + geom_smooth(method=lm)
@@ -230,20 +231,25 @@ evropski.standard <- StephCurry %>% mutate(Tocke=predict(fittocke, .))
 top5place <- place %>% select(1,3) %>% top_n(5) 
 top5tocke <- inner_join(top5place, statistika.ucinkovitosti, by = "Player") %>% 
   select(1,2,6)
-  
+top5zdruzena <- rbind(evropski.standard %>% mutate(tip="Evropski_standard"), top5tocke %>% transmute(Tocke=PTS, Placa=Salary, tip="Ameriški_standard")) %>% 
+  mutate(Placa = Placa / 1e+06)
 ######################################################################################## 
 
 # Izris Predikcije
-ggplot(data=tockevsplaca, aes(x=Tocke, y=Placa)) + 
+ggplot(data=tockevsplaca%>% mutate(Placa = Placa/1e+06), aes(x=Tocke, y=Placa)) + 
   geom_point(shape=1) + 
   geom_smooth(method=lm) + 
-  geom_vline(data=evropski.standard, aes(xintercept=Tocke, y=Placa), color='red', size=1) + 
-  geom_point(data=evropski.standard, aes(x=Tocke, y=Placa), color='purple', size=2) + 
+  geom_vline(data=top5_zdruzena, aes(xintercept=Tocke, y=Placa,colour=tip), size=1) + 
+  geom_point(data=top5_zdruzena, aes(x=Tocke, fill=tip), shape=21, size=2) + 
   ggtitle("Evropejci vs top 5 (Američani)") + 
-  ylab("Plača") + xlab("Točke") +
-  theme_bw() + 
-  geom_vline(data=top5tocke, aes(xintercept=PTS, y=Salary), color='green', size=1) + 
-  geom_point(data=top5tocke, aes(x=PTS, y=Salary), color='brown', size=2) 
+  ylab("Plača (v milijonih)") + xlab("Točke") +
+  scale_colour_manual(name = 'Moja legenda 1', 
+                      values =c('Evropejci'='red','Američani'='green'))+
+  scale_fill_manual(name = 'Moja legenda 2', 
+                    values =c('Evropejci'='purple','Američani'='brown'))+
+  theme_bw()
+
+
 
 ##############################################################################################
 

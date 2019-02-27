@@ -1,5 +1,5 @@
 ---
-title: "Poročilo pri predmetu Analiza podatkov s programom R"
+title: "Analiza evropejcev v ameriški košarkarski ligi NBA"
 author: "Urh Peček"
 output:
   html_document: default
@@ -26,7 +26,7 @@ source("lib/rstudio.r", encoding="UTF-8")
 # Izbira teme
 
 Naredil sem raziskavo evropejcev v ameriški košarkarski ligi NBA.
-Raziskoval sem vpliv plače na učinkovitost, ter favoriziranje domačih igralcev s strani američanov.
+Raziskoval sem vpliv plače na učinkovitost ter favoriziranje domačih igralcev s strani američanov.
 Med sabo sem primerjal tudi evropske države.
 
 ![](slike/NBAlog.png)
@@ -99,14 +99,14 @@ source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 
 Za začetek si poglejmo koliko NBA igralcev premore vsaka evropska država.
 Če v državi ni nobenega, ki igra v ligi NBA je pobarvana s sivo barvo.
-Vidimo da prevladuje Francija z desetimi, sledijo Španija s sedmimi ter Srbija in Nemčija s petimi.
+Vidimo da prevladuje Francija z desetimi, sledijo Španija s sedmimi ter Srbija in Nemčija s petimi igralci.
 Slovenija je imela v sezoni 2017/18 le enega, to je bil Goran Dragič.
 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.align='center', fig.cap=''}
 ggplot() + geom_polygon(data=left_join(Evropa, ujemanje %>% filter(Players > 0), by=c("NAME"="Country")),
                         aes(x=long, y=lat, group=group, fill=Players)) +
-  ggtitle("Števila NBA igralcev v posamezni evropski državi") + xlab("") + ylab("") +
+  ggtitle("Število NBA igralcev v posamezni evropski državi") + xlab("") + ylab("") +
   guides(fill=guide_colorbar(title="Število igralcev")) + 
   geom_point(aes(x=2, y=46)) + geom_text(aes(x=2, y=46), label = "Fra-10") +
   geom_point(aes(x=2, y=46)) + geom_text(aes(x=14.4, y=46), label = "Slo-1") +
@@ -121,7 +121,7 @@ Torej so Balkanske države močno košarkaške, česar pa ne bi pričakovali za 
 ```{r, echo=FALSE, message=FALSE, fig.align='center', warning=FALSE, fig.cap=''}
 ggplot() + geom_polygon(data=left_join(Evropa, fiba.lestvica.plot.population[,c(1,5)] %>% filter(St.IgralcevNa10milijonov > 0) , by=c("NAME"="Country")),
                         aes(x=long, y=lat, group=group, fill=St.IgralcevNa10milijonov)) +
-  ggtitle("Števila NBA igralcev v posamezni evropski državi na 10 milijonov prebivalcev") + xlab("") + ylab("") +
+  ggtitle("Število NBA igralcev v posamezni evropski državi na 10 milijonov prebivalcev") + xlab("") + ylab("") +
   guides(fill=guide_colorbar(title="Število igralcev")) +
   scale_fill_gradient2(low = "#008000", mid = "yellow", high = "red", midpoint = 15)
   
@@ -134,13 +134,12 @@ Graf prikazuje povezavo med plačo in številom točk na minuto, ki jih dosegajo
 ggplot(data=tockevsplaca, aes(x=Tocke, y=Placa)) + 
   geom_point(shape=1) + 
   geom_smooth(method=lm) + 
-  geom_vline(data=evropski.standard, aes(xintercept=Tocke, y=Placa), color='red', size=1) + 
-  geom_point(data=evropski.standard, aes(x=Tocke, y=Placa), color='purple', size=2) + 
+  geom_vline(data=top5zdruzena, aes(xintercept=Tocke, y=Placa, colour=tip), size=1) + 
+  geom_point(data=top5zdruzena, aes(x=Tocke, fill=tip), shape=21, size=2, show_guide=FALSE) + 
   ggtitle("Evropejci vs top 5 (Američani)") + 
-  ylab("Plača") + xlab("Točke") +
-  theme_bw() + 
-  geom_vline(data=top5tocke, aes(xintercept=PTS, y=Salary), color='green', size=1) + 
-  geom_point(data=top5tocke, aes(x=PTS, y=Salary), color='brown', size=2) 
+  ylab("Plača  (v milijonih)") + xlab("Točke") +
+  scale_colour_manual(name = "Pričakovane Točke", values=c("Evropski_standard"="red","Ameriški_standard"="green")) +
+  theme_bw()
 
 ```
 
