@@ -128,8 +128,9 @@ ggplot() + geom_polygon(data=left_join(Evropa, fiba.lestvica.plot.population[,c(
 ```
 
 
+Graf prikazuje povezavo med plačo in številom točk na minuto, ki jih dosegajo igralci. Dodanih je tudi 5 najbolje plačanih NBA igralcev, ki so vsi američani, ter koliko točk na minuto bi morali dosegati glede na evropske standarde.
 
-```{r zemljevid, echo=FALSE, fig.align='center', warning=FALSE, fig.cap='Graf prikazuje povezavo med plačo in številom točk na minuto, ki jih dosegajo igralci. Dodanih je tudi 5 najbolje plačanih NBA igralcev, ki so vsi američani, ter koliko točk na minuto bi morali dosegati glede na evropske standarde.'}
+```{r zemljevid, echo=FALSE, fig.align='center', warning=FALSE, fig.cap=''}
 ggplot(data=tockevsplaca, aes(x=Tocke, y=Placa)) + 
   geom_point(shape=1) + 
   geom_smooth(method=lm) + 
@@ -156,15 +157,15 @@ Za konec pa si oglejmo še obnašanje več spremenljivk glede na plačo.
 
 ```{r, echo=FALSE, fig.align='center', warning=FALSE, message=FALSE, fig.cap=''}
 ggplot() + geom_smooth(data=metvsplaca.rank, aes(x=EffectiveFieldGoal.rank, y=Salary.rank, col="Met"), se=FALSE, size=2) +
-  geom_smooth(data=tockevsplaca.rank, aes(x=Points.rank, y=Salary.rank, col="Tocke"), se=FALSE, size=2) + 
+  geom_smooth(data=tockevsplaca.rank, aes(x=Points.rank, y=Salary.rank, col="Točke"), se=FALSE, size=2) + 
   geom_smooth(data=podajevsplaca.rank, aes(x=Assists.rank, y=Salary.rank, col="Podaje"), se=FALSE, size=2) + 
   geom_smooth(data=skokivsplaca.rank, aes(x=Rebounds.rank, y=Salary.rank, col="Skoki"), se=FALSE, size=2) +
   geom_smooth(data=minutevsplaca.rank, aes(x=MinutesPlayed.rank, y=Salary.rank, col="Odigrane minute"), se=FALSE, size=2) +
-  geom_smooth(data=ucinkovitostvsplaca, aes(x=Sum.rank, y=Salary.rank, col="Overall"), se=FALSE, size=4) +
+  geom_smooth(data=ucinkovitostvsplaca, aes(x=Sum.rank, y=Salary.rank, col="Skupno"), se=FALSE, size=4) +
   ylab("Plača") + xlab("Rank") + 
-  labs(title="Obnašanje več spremenljivk glede na plačo, ranking") +
+  labs(title="Obnašanje več spremenljivk glede na plačo (ranking)") +
   theme_bw() +
-  theme(legend.position = c(0.1, 0.75), legend.text=element_text(size=20), legend.title = element_blank())
+  theme(legend.position = c(0.15, 0.8), legend.text=element_text(size=10), legend.title = element_blank())
 ```
 
 

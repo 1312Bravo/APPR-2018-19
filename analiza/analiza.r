@@ -291,19 +291,14 @@ ggplot() + geom_smooth(data=metvsplaca.rank, aes(x=EffectiveFieldGoal.rank, y=Sa
   geom_smooth(data=podajevsplaca.rank, aes(x=Assists.rank, y=Salary.rank, col="Podaje"), se=FALSE, size=2) + 
   geom_smooth(data=skokivsplaca.rank, aes(x=Rebounds.rank, y=Salary.rank, col="Skoki"), se=FALSE, size=2) +
   geom_smooth(data=minutevsplaca.rank, aes(x=MinutesPlayed.rank, y=Salary.rank, col="Odigrane minute"), se=FALSE, size=2) +
-  geom_smooth(data=ucinkovitostvsplaca, aes(x=Sum.rank, y=Salary.rank, col="Overall"), se=FALSE, size=4) +
+  geom_smooth(data=ucinkovitostvsplaca, aes(x=Sum.rank, y=Salary.rank, col="Skupno"), se=FALSE, size=4) +
   ylab("Plača") + xlab("Rank") + 
   labs(title="Obnašanje več spremenljivk glede na plačo, ranking") +
   theme_bw() +
-  theme(legend.position = c(0.1, 0.75), legend.text=element_text(size=20), legend.title = element_blank())
+  theme(legend.position = c(0.15, 0.75), legend.text=element_text(size=10), legend.title = element_blank())
 
 ########################################################################################################  
 
-# Razvrščanje
-
-
-evropejci.razvrscanje <-  inner_join(zaupanje.evropejcem, ucinkovitost.evropejcev.overall, by="Player") %>% 
-  select(1, 6, 7, 11, 16, 9) 
 
 
 
