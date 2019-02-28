@@ -75,7 +75,8 @@ fiba.lestvica.plot[3] <- fiba.lestvica.plot[3] / 10000000
 names(fiba.lestvica.plot)[2:4] <- c("Evropa.rank",  "Populacija", "St.Igralcev")
 fiba.lestvica.plot <- fiba.lestvica.plot %>%
   arrange(St.Igralcev,Populacija) %>%
-  mutate(Country=factor(Country,levels=Country,ordered=T))
+  mutate(Country=factor(Country,levels=Country,ordered=T)) %>%
+  filter(St.Igralcev > 0)
 plot2.tidy <- melt(fiba.lestvica.plot, id.vars="Country", measure.vars=colnames(fiba.lestvica.plot)[-1])
 
 ggplot(data=plot2.tidy %>% filter(variable == "Evropa.rank") %>%
@@ -84,8 +85,8 @@ ggplot(data=plot2.tidy %>% filter(variable == "Evropa.rank") %>%
                       filter(variable %in% c("Populacija", "St.Igralcev"))),
        aes(x=Country, y=value, fill=variable)) +
   geom_col(position="dodge") +
-  coord_flip() + ylab("Število igralcev") + xlab("Država") +
-  labs(title="Primerjava populacije(/10 milijonov) in števila NBA igralcev")
+  coord_flip() + ylab("Število igralcev na 10 milijonov") + xlab("Država") +
+  labs(title="Primerjava populacije in števila NBA igralcev (na 10 milijonov)")
 
 
 

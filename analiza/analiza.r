@@ -288,8 +288,6 @@ skokivsplaca.rank <- skokivsplaca.rank[, c(1,3,12)]
 minutevsplaca.rank <- inner_join(zaupanje.evropejcem, ucinkovitost.evropejcev.overall, by="Player")
 minutevsplaca.rank <- minutevsplaca.rank[, c(1,3,6)]
 
-##############################################################################################
-
 # Kako se več spremenljivk obnaša glede na plačo rank
 ggplot() + geom_smooth(data=metvsplaca.rank, aes(x=EffectiveFieldGoal.rank, y=Salary.rank, col="Met"), se=FALSE, size=2) +
   geom_smooth(data=tockevsplaca.rank, aes(x=Points.rank, y=Salary.rank, col="Tocke"), se=FALSE, size=2) + 
@@ -304,25 +302,32 @@ ggplot() + geom_smooth(data=metvsplaca.rank, aes(x=EffectiveFieldGoal.rank, y=Sa
 
 ########################################################################################################  
 
+rank_table <- inner_join(zaupanje.evropejcem, ucinkovitost.evropejcev.overall, by="Player")
+
+ggplot(data=rank_table) +
+  geom_smooth(aes(x=EffectiveFieldGoal.rank, y=Salary.rank, col="Met"), se=FALSE, size=2) +
+  geom_smooth(aes(x=Points.rank, y=Salary.rank, col="Tocke"), se=FALSE, size=2) +
+  geom_smooth(aes(x=Assists.rank, y=Salary.rank, col="Podaje"), se=FALSE, size=2) +
+  geom_smooth(aes(x=Rebounds.rank, y=Salary.rank, col="Skoki"), se=FALSE, size=2) +
+  geom_smooth(aes(x=MinutesPlayed.rank, y=Salary.rank, col="Odigrane minute"), se=FALSE, size=2) +
+  geom_smooth(aes(x=Sum.rank, y=Salary.rank, col="Skupno"), se=FALSE, size=4) +
+  ylab("Plača ranking") + xlab("Rank") +
+  labs(title="Obnašanje več spremenljivk glede na plačo, ranking") +
+  theme_bw() +
+  theme(legend.position = c(0.15, 0.75), legend.text=element_text(size=10), legend.title = element_blank())
+  
+############################################################################################################
 
 
 
+# Poskusim clustering
+library("cluster")
+library("factoextra")
 
+skupno_cluster <- inner_join(statistika.ucinkovitosti, statistika.zaupanja, by="Player")
+skupno_cluster <- skupno_cluster[, c(1, 2, 11:18, 25, 27:29)]
+names(skupno_cluster)[2] <- "Country"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Neznam, nevem
 
 
