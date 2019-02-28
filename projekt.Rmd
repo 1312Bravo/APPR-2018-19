@@ -99,7 +99,7 @@ source("vizualizacija/vizualizacija.r", encoding="UTF-8")
 
 Za začetek si poglejmo koliko NBA igralcev premore vsaka evropska država.
 Če v državi ni nobenega, ki igra v ligi NBA je pobarvana s sivo barvo.
-Vidimo da prevladuje Francija z desetimi, sledijo Španija s sedmimi ter Srbija in Nemčija s petimi igralci.
+Vidimo da prevladuje Francija z desetimi, sledijo Španija s sedmimi ter Srbija, Turčija, Hrvaška in Nemčija s petimi igralci.
 Slovenija je imela v sezoni 2017/18 le enega, to je bil Goran Dragič.
 
 
@@ -192,9 +192,12 @@ ggplot(data=rank_table) +
   theme(legend.position = c(0.15, 0.75), legend.text=element_text(size=10), legend.title = element_blank())
   
 ```
-
-Opazimo, da je tako kot bi pričakovali, najboljši ranking imajo najbolje plačani igralci, vendar zaradi števila obravnavanih igralcev (61) prihaja do odstopanj.
-
+ 
+ 
+V grafu lahko opazimo, da število odigranih minut nekako najbolje sledi plači in ranku, pri čemer pri ranku 300 doseže maksimum in se potem močno ne spreminja več.
+Ostali dejavniki so bolj variabilni, nihajo, kar pomeni, da igralci velikokrat ne dosežejo najboljših učinkov pri vseh parametrih, saj igrajo na različnih pozicijah in imajo v ekipi različne vloge.
+Da bi to podrobneje raziskali, bi potrebavi vedeti še pozicije igralcev, ki pa jih v tej raziskavi žal nismo upoštevali.
+Evropejcev je v ligi NBA samo 61, zato so nekatera odstopanja pričakovana.
 
 ***
 
